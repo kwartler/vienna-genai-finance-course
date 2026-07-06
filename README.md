@@ -122,3 +122,8 @@ Open `keys.example.md` in the repo for instructions on where to store your API k
   - `day2-datascience/` — portfolio optimization and rolling metrics scripts
 - `spa-template/` — Vite vanilla scaffold with GitHub Actions deploy workflow
 - `keys.example.md` — notes on where to store API keys (never commit real keys)
+
+
+## SPA Template
+
+The application scaffold (Vite files + GitHub Actions release workflow) lives in a separate repo, kept as the single source of truth: https://github.com/kwartler/vienna-genai-spa-template. Use that template for Repo 1, 2, and 3 builds. Do not duplicate the scaffold here.
