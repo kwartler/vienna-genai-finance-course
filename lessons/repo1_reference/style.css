@@ -1,0 +1,149 @@
+:root {
+  --ink: #14213d;
+  --paper: #fafaf7;
+  --line: #d8d3c4;
+  --accent: #9a6b2c;
+  --error: #a6302c;
+  --card: #f1eee3;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Georgia', 'Iowan Old Style', serif;
+  line-height: 1.5;
+}
+
+.app-header {
+  padding: 2rem 1.5rem 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.6rem;
+  letter-spacing: 0.01em;
+}
+
+.subtitle {
+  margin: 0.25rem 0 0;
+  font-family: 'Menlo', 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+
+.app-main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.panel {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 1.25rem;
+  background: white;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+  margin-bottom: 0.75rem;
+}
+
+label {
+  font-family: 'Menlo', 'Courier New', monospace;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+}
+
+input {
+  padding: 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+button {
+  margin-top: 0.25rem;
+  padding: 0.6rem 1rem;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  border-radius: 3px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--accent);
+}
+
+.status {
+  font-family: 'Menlo', 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: var(--accent);
+  min-height: 1.2rem;
+}
+
+.status.error {
+  color: var(--error);
+}
+
+.charts {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.chart-block h2 {
+  font-size: 1rem;
+  margin: 0 0 0.5rem;
+}
+
+.placeholder {
+  color: #8a8577;
+  font-style: italic;
+}
+
+.error {
+  color: var(--error);
+}
+
+#research-note h2 {
+  font-size: 1.05rem;
+  margin: 1rem 0 0.35rem;
+}
+
+#research-note h2:first-child {
+  margin-top: 0;
+}
+
+.app-footer {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1.5rem 2rem;
+  font-size: 0.85rem;
+  color: #8a8577;
+}
+
+@media (max-width: 640px) {
+  .field-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
