@@ -281,31 +281,97 @@ RSI (${latest.rsiPeriod} day): ${latest.rsi}
 
 Explain what these signals suggest right now, write a one paragraph research note, and list three risk factors.`;
 
+  const jsonSchema = {
+    name: 'signal_explainer',
+    strict: true,
+    schema: {
+      type: 'object',
+      properties: {
+        explanation: { type: 'string' },
+        research_note: { type: 'string' },
+        risks: { type: 'array', items: { type: 'string' }, minItems: 3, maxItems: 3 },
+      },
+      required: ['explanation', 'research_note', 'risks'],
+      additionalProperties: false,
+    },
+  };
+
+  // Two layers of defense, since JSON reliability varies by model and route:
+  // 1. Ask OpenRouter to enforce the schema formally. Not every model or
+  //    provider route supports this, so the request itself might fail.
+  // 2. A prefill message that starts the assistant's reply with "{", which
+  //    stops Claude from adding a preamble or a markdown fence before it,
+  //    since the reply has technically already begun.
+  const baseMessages = [
+    { role: 'system', content: systemPrompt },
+    { role: 'user', content: userPrompt },
+  ];
+
+  let raw = await callOpenRouter(apiKey, baseMessages, jsonSchema);
+  let parsed = tryParseJson(raw);
+  if (parsed) return parsed;
+
+  console.warn('First attempt did not parse as JSON, retrying with a prefilled response:', raw);
+
+  const prefillMessages = [...baseMessages, { role: 'assistant', content: '{' }];
+  raw = await callOpenRouter(apiKey, prefillMessages, null);
+  parsed = tryParseJson('{' + raw);
+  if (parsed) return parsed;
+
+  console.error('Model response still not valid JSON after retry:', raw);
+  throw new Error('The model did not return valid JSON, even after a retry. Check the browser console for what it actually sent back.');
+}
+
+async function callOpenRouter(apiKey, messages, jsonSchema) {
+  const body = {
+    model: 'anthropic/claude-sonnet-4-6',
+    messages,
+    max_tokens: 600,
+  };
+  if (jsonSchema) {
+    body.response_format = { type: 'json_schema', json_schema: jsonSchema };
+  }
+
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      model: 'anthropic/claude-sonnet-4-6',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt },
-      ],
-      max_tokens: 600,
-    }),
+    body: JSON.stringify(body),
   });
 
-  if (!response.ok) throw new Error('OpenRouter call failed. Check your API key.');
+  if (!response.ok) {
+    if (jsonSchema) {
+      // This model or route may not support response_format. Fall back to
+      // asking again without it, rather than failing the whole request.
+      console.warn('response_format was rejected, retrying without it.');
+      return callOpenRouter(apiKey, messages, null);
+    }
+    throw new Error('OpenRouter call failed. Check your API key.');
+  }
 
   const data = await response.json();
-  const raw = data.choices?.[0]?.message?.content ?? '';
+  return data.choices?.[0]?.message?.content ?? '';
+}
+
+// Strips markdown code fences and leading or trailing text around the JSON,
+// then attempts to parse. Returns null instead of throwing, so callers can
+// decide what to do next (such as retrying) rather than crashing.
+function tryParseJson(text) {
+  let cleaned = text.trim();
+  cleaned = cleaned.replace(/^```json\s*/i, '').replace(/^```\s*/, '').replace(/```\s*$/, '');
+
+  const firstBrace = cleaned.indexOf('{');
+  const lastBrace = cleaned.lastIndexOf('}');
+  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+    cleaned = cleaned.slice(firstBrace, lastBrace + 1);
+  }
 
   try {
-    return JSON.parse(raw);
+    return JSON.parse(cleaned);
   } catch (e) {
-    throw new Error('The model did not return valid JSON. Try again, or tighten the system prompt.');
+    return null;
   }
 }
 
