@@ -99,6 +99,45 @@ barplot(weights_matrix,
 # two or three tickers: it is chasing return per unit of risk
 # and has no reason to hold anything mediocre.
 
+# ---- Export the results so a person (or an LLM) can read them ----
+# jsonlite ships with most R installs; install.packages("jsonlite") if not.
+library(jsonlite)
+
+export_list <- list(
+  tickers = tickers,
+  risk_free_rate_annual = RISK_FREE_RATE_ANNUAL,
+  weights = list(
+    equal_weight = as.list(round(equal_weights, 4)),
+    min_variance = as.list(round(min_var_weights, 4)),
+    max_sharpe   = as.list(round(max_sharpe_weights, 4))
+  ),
+  stats = as.list(as.data.frame(summary_table))
+)
+
+write_json(export_list, "portfolio_summary.json", pretty = TRUE, auto_unbox = TRUE)
+cat("\nWrote portfolio_summary.json\n")
+
+# WHY EXPORT? R did every calculation here; this JSON is just
+# the finished numbers. That is the course principle in action:
+# the math lives in R, and an LLM only reads and interprets the
+# result, it never recomputes it. The SPA you build later will
+# fetch its own live data instead of this file, but the split
+# is the same: numbers are computed, the model explains them.
+#
+# To see the interpretation step, open a chatbot such as
+# duck.ai, paste the JSON, and try this prompt:
+#
+#   "You are a portfolio analyst. Below is JSON with three
+#    portfolios (equal weight, minimum variance, maximum
+#    Sharpe) built from the same five stocks, plus each one's
+#    annualized return, volatility, and Sharpe ratio. In plain
+#    English: (1) explain how the three differ in what they
+#    optimize for, (2) point out which names each concentrates
+#    in or avoids, (3) name two risks a human should check
+#    before trusting these weights. Do not recalculate any
+#    numbers; interpret only what is given.
+#    <paste portfolio_summary.json here>"
+
 # ---- Closing thought ----
 # All three of these portfolios are DRAFTS built from two
 # years of history. Before any of them touches real capital,

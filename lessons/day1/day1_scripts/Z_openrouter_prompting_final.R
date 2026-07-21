@@ -10,6 +10,7 @@ systemPrompt    <- "You are a helpful AI assistant"
 userPrompt      <- "What is the Apple stock ticker?"
 # Grounding demo prompt (use with the search model below):
 # userPrompt    <- "What was Apple's most recent quarterly revenue?"
+# userPrompt    <- "Give me a random number between 1-50."
 maxTokens       <- 800
 temperature     <- 0.7
 openRouterModel <- 'openai/gpt-4.1-nano'   
