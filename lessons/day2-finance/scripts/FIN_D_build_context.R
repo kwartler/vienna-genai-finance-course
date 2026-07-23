@@ -117,10 +117,6 @@ if (nrow(this_call) == 0) {
   stop(paste("The file for", SYMBOL, "is empty."))
 }
 
-if (nrow(this_call) == 0) {
-  stop(paste("No transcript rows for", SYMBOL))
-}
-
 cat("Loaded", nrow(this_call), "speaker turns from the", latest_date, "call.\n")
 
 # ---- Select, do not send everything ----
@@ -325,7 +321,7 @@ cat("   re-run, and see whether the model starts filling them in.\n\n")
 # question it cannot answer from the context will usually
 # answer anyway. The instruction not to is doing real work.
 
-saveRDS(assembled_context, "assembled_context.rds")
+saveRDS(assembled_context, file.path(savePth, "assembled_context.rds"))
 cat("Saved assembled_context.rds\n")
 
 # ============================================================

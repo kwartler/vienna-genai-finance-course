@@ -25,7 +25,7 @@ library(jsonlite)
 # Get a free key at https://newsapi.org/register
 #
 # Set it in the CONSOLE, not in this file:
-#   Sys.setenv(NEWSAPI_KEY = "your_key_here")
+#   Sys.setenv(NEWSORG_API_KEY = "your_key_here")
 #
 # WHY THIS MATTERS. A key is a password. If you type it into
 # a script and that script goes into a shared repo, you have

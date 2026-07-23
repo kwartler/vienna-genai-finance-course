@@ -27,6 +27,9 @@ library(jsonlite)
 
 RISKLINE_URL <- "https://api.riskline.com/alerts/latest.json"
 
+# Save Path
+savePth <- '~/Desktop/vienna-genai-finance-course/context_files'
+
 # Countries you care about for a given investment thesis.
 # Change these and re-run to see the filter work.
 COUNTRIES_OF_INTEREST <- c("United States", "China", "Taiwan", "Germany")
@@ -52,28 +55,24 @@ if (status_code(response) != 200) {
 raw_text <- content(response, as = "text", encoding = "UTF-8")
 alerts_parsed <- fromJSON(raw_text, flatten = TRUE)
 
-# The API wraps its results, so find the actual table of
-# alerts whatever the wrapper happens to be called.
-if (is.data.frame(alerts_parsed) == TRUE) {
-  alerts <- alerts_parsed
-} else {
-  alerts <- NULL
-  for (nm in names(alerts_parsed)) {
-    if (is.data.frame(alerts_parsed[[nm]]) == TRUE) {
-      alerts <- alerts_parsed[[nm]]
-      cat("Alerts found under the field named:", nm, "\n")
-      break
-    }
-  }
-}
+# The API wraps its results in a field called "alerts", so the
+# table we want is one level down.
+alerts <- alerts_parsed$alerts
 
-if (is.null(alerts) == TRUE) {
-  cat("\nCould not find a table of alerts. Here is the raw structure:\n")
+if (is.null(alerts) == TRUE || is.data.frame(alerts) == FALSE) {
+  cat("\nExpected a table under $alerts but did not find one.\n")
+  cat("Here is the actual structure returned:\n")
   str(alerts_parsed, max.level = 2)
   stop("Inspect the structure above and adjust this script.")
 } else {
   cat("Alerts received:", nrow(alerts), "\n\n")
 }
+
+# NOTE ON flatten = TRUE. The response nests country details
+# inside each alert, like country: { name: ..., flag_path: ... }.
+# Flattening turns those into flat columns joined by a dot,
+# so the field is "country.name", not "country". Run
+# names(alerts) below and you will see it.
 
 # ============================================================
 # WHAT DID WE ACTUALLY GET?
@@ -87,7 +86,10 @@ cat(paste(names(alerts), collapse = ", "), "\n\n")
 # of a response first is the habit that saves the most time.
 
 cat("---- First few alerts ----\n")
-preview_cols <- intersect(c("country", "title", "category", "risk_level", "start_date"), names(alerts))
+# The fields we care about are the country name, the headline,
+# and when it was published. flag_path is a link to an image
+# and is no use to a language model, so we leave it out.
+preview_cols <- intersect(c("country.name", "title", "created_at"), names(alerts))
 
 if (length(preview_cols) > 0) {
   print(head(alerts[, preview_cols], 8), row.names = FALSE)
@@ -107,7 +109,16 @@ cat("\n")
 # relevant signal in noise.
 
 if ("country.name" %in% names(alerts) == TRUE) {
-  relevant <- alerts[alerts$country %in% COUNTRIES_OF_INTEREST, ]
+
+  # Before filtering, see which countries actually appear.
+  # Filtering on a name that is not in the feed returns zero
+  # rows and looks like a bug, so check first.
+  cat("Countries present in this feed:\n")
+  print(head(sort(table(alerts$country.name), decreasing = TRUE), 12))
+  cat("\n")
+
+  relevant <- alerts[alerts$country.name %in% COUNTRIES_OF_INTEREST, ]
+
   cat("---- Filtered to your countries of interest ----\n")
   cat("Before:", nrow(alerts), "alerts\n")
   cat("After: ", nrow(relevant), "alerts\n")
@@ -116,14 +127,15 @@ if ("country.name" %in% names(alerts) == TRUE) {
   }
 
   if (nrow(relevant) > 0) {
-    show_cols <- intersect(c("country", "title", "category"), names(relevant))
+    show_cols <- intersect(c("country.name", "title", "created_at"), names(relevant))
     print(head(relevant[, show_cols], 10), row.names = FALSE)
     cat("\n")
   } else {
-    cat("No current alerts for those countries. Try adding others.\n\n")
+    cat("No current alerts for those countries.\n")
+    cat("Look at the country list printed above and pick names that appear there.\n\n")
   }
 } else {
-  cat("This response has no 'country' field, so the filter is skipped.\n")
+  cat("This response has no 'country.name' field, so the filter is skipped.\n")
   cat("Look at the field list above and pick something else to filter on.\n\n")
   relevant <- alerts
 }
@@ -145,9 +157,23 @@ buildMacroContext <- function(alert_rows) {
   n_show <- min(nrow(alert_rows), 10)
 
   for (i in 1:n_show) {
-    country_txt <- ifelse("country" %in% names(alert_rows) == TRUE, alert_rows$country[i], "Unknown")
-    title_txt <- ifelse("title" %in% names(alert_rows) == TRUE, alert_rows$title[i], "")
-    lines <- c(lines, paste0("- ", country_txt, ": ", title_txt))
+    if ("country.name" %in% names(alert_rows) == TRUE) {
+      country_txt <- alert_rows$country.name[i]
+    } else {
+      country_txt <- "Unknown"
+    }
+    title_txt <- alert_rows$title[i]
+
+    # Include when it was published. A model has no sense of
+    # time on its own, so telling it how fresh an item is
+    # changes how much weight that item deserves.
+    if ("created_at" %in% names(alert_rows) == TRUE) {
+      date_txt <- paste0(" (", substr(alert_rows$created_at[i], 1, 10), ")")
+    } else {
+      date_txt <- ""
+    }
+
+    lines <- c(lines, paste0("- ", country_txt, ": ", title_txt, date_txt))
   }
 
   block <- paste0("CURRENT MACRO RISK ALERTS\n", paste(lines, collapse = "\n"))
@@ -167,6 +193,13 @@ cat("Roughly", round(nchar(macro_context) / 4), "tokens\n\n")
 # model something it could not possibly infer from a company's
 # own earnings call. That combination, high value and low
 # cost, is exactly what you want in a context window.
+#
+# Also notice how little this feed actually carries: a title,
+# a timestamp, a country, and a link to a flag image. There is
+# no body text and no severity score. The headline IS the
+# alert. That is a limitation worth knowing before you build
+# anything on top of it, and it is the kind of thing you only
+# discover by printing the field names first.
 
 # ============================================================
 # SAVE IT
@@ -174,9 +207,9 @@ cat("Roughly", round(nchar(macro_context) / 4), "tokens\n\n")
 
 # FIN_D assembles this together with the transcript and news
 # into a single prompt.
-#####
-saveRDS(macro_context, "macro_context.rds")
-cat("Saved macro_context.rds for use in FIN_D.\n")
+pth <- file.path(savePth, "macro_context.rds")
+saveRDS(macro_context, pth)
+cat(paste("Saved macro_context.rds for use in FIN_D.\n in", pth))
 
 # ============================================================
 # WHAT YOU SHOULD TAKE AWAY
@@ -186,5 +219,4 @@ cat("\n---- Summary ----\n")
 cat("1. Not every API needs a key. Start with the easy ones.\n")
 cat("2. Read the shape of a response before writing code against it.\n")
 cat("3. Filtering is context engineering. Noise costs money and hides signal.\n")
-cat("4. Context must be text, so structured data has to be rendered into prose.\n")
-
+cat("4. Context must be text, structured data has to be adjusted as prose or JSON because LLMs can struggle with large tabular data.\n")
