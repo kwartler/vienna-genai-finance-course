@@ -1,13 +1,8 @@
 import Chart from 'chart.js/auto';
 
-// ---------------------------------------------------------------------------
-// Yahoo Finance's chart endpoint does not send CORS headers, so a direct
-// fetch() from a browser gets blocked. We route through a public CORS proxy.
-// This is a real constraint of running entirely client side with no backend.
-// If corsproxy.io is slow or rate limited during class, swap in an
-// alternative such as https://api.allorigins.win/raw?url= (see PROXY below).
-// ---------------------------------------------------------------------------
-const PROXY = 'https://corsproxy.io/?url=';
+// Financial Modeling Prep sends CORS headers, so the browser can fetch it
+// directly with no proxy. The FMP key is entered in the form field below.
+// Get a free key from your FMP dashboard at https://site.financialmodelingprep.com/.
 
 const form = document.getElementById('signal-form');
 const statusEl = document.getElementById('status');
@@ -22,6 +17,7 @@ form.addEventListener('submit', async (event) => {
   const fastWindow = parseInt(document.getElementById('ma-fast').value, 10);
   const slowWindow = parseInt(document.getElementById('ma-slow').value, 10);
   const rsiPeriod = parseInt(document.getElementById('rsi-period').value, 10);
+  const fmpKey = document.getElementById('fmp-key').value.trim();
   const apiKey = document.getElementById('openrouter-key').value.trim();
 
   if (fastWindow >= slowWindow) {
@@ -33,7 +29,7 @@ form.addEventListener('submit', async (event) => {
   researchNote.innerHTML = '<p class="placeholder">Working on it...</p>';
 
   try {
-    const candles = await fetchOhlcv(ticker);
+    const candles = await fetchOhlcv(ticker, fmpKey);
     const closes = candles.map((c) => c.close);
 
     setStatus('Calculating indicators...');
@@ -80,23 +76,32 @@ function lastValid(arr) {
 }
 
 // ---------------------------------------------------------------------------
-// Data fetch: unauthenticated Yahoo Finance chart endpoint, via CORS proxy
+// Data fetch: Financial Modeling Prep daily prices (last year), called
+// directly from the browser since FMP sends CORS headers.
 // ---------------------------------------------------------------------------
-async function fetchOhlcv(ticker) {
-  const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=1y&interval=1d`;
-  const response = await fetch(PROXY + encodeURIComponent(yahooUrl));
+async function fetchOhlcv(ticker, fmpKey) {
+  const to = new Date();
+  const from = new Date();
+  from.setFullYear(from.getFullYear() - 1);
+  const fmt = (d) => d.toISOString().slice(0, 10);
+
+  const url = `https://financialmodelingprep.com/stable/historical-price-eod/full?symbol=${ticker}&from=${fmt(from)}&to=${fmt(to)}&apikey=${fmpKey}`;
+  const response = await fetch(url);
+
+  const raw = await response.json();
+  // FMP reports key/plan problems as { "Error Message": "..." }.
+  if (raw && raw['Error Message']) throw new Error(raw['Error Message']);
   if (!response.ok) throw new Error('Price fetch failed. Check the ticker and try again.');
 
-  const data = await response.json();
-  const result = data.chart && data.chart.result && data.chart.result[0];
-  if (!result) throw new Error('No price data returned for that ticker.');
+  // The stable endpoint returns a bare array; older paths nest it under `historical`.
+  const bars = Array.isArray(raw) ? raw : (raw.historical ?? []);
+  if (!bars.length) throw new Error('No price data returned for that ticker.');
 
-  const timestamps = result.timestamp;
-  const closes = result.indicators.quote[0].close;
-
-  return timestamps
-    .map((t, i) => ({ date: new Date(t * 1000), close: closes[i] }))
-    .filter((c) => c.close !== null && c.close !== undefined);
+  // FMP returns newest first; the indicators expect oldest to newest.
+  return bars
+    .map((b) => ({ date: new Date(b.date), close: Number(b.close) }))
+    .filter((c) => !Number.isNaN(c.close))
+    .sort((a, b) => a.date - b.date);
 }
 
 // ---------------------------------------------------------------------------

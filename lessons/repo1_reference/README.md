@@ -4,9 +4,9 @@ This is a working implementation of the Day 1 afternoon build (14:00 to 17:00), 
 
 ## An important constraint: CORS
 
-Yahoo Finance's chart endpoint does not send CORS headers, so a browser based `fetch()` call gets blocked by the browser, unlike the R scripts this morning, which ran server side and never hit this restriction. `main.js` routes the request through a public CORS proxy (`corsproxy.io`) to work around this.
+A browser blocks a `fetch()` to any API that does not send CORS headers, unlike the R scripts this morning, which ran server side and never hit this restriction. Yahoo Finance's chart endpoint does not send those headers, so this app uses Financial Modeling Prep instead, which does. That lets `main.js` call it directly from the browser, with no proxy.
 
-Public proxies can be slow or rate limited, especially with a full class hitting them around the same time. Test this the morning of class. If it is unreliable, the easiest fallback is swapping in a different proxy such as `https://api.allorigins.win/raw?url=`, changing only the `PROXY` constant at the top of `main.js`.
+Enter your FMP key in the app's "Financial Modeling Prep API key" field, alongside the OpenRouter key. Get a free key from your FMP dashboard at https://site.financialmodelingprep.com/. The key stays in the browser and is not committed to the repo.
 
 ## A known inconsistency worth knowing about
 
@@ -14,10 +14,31 @@ The RSI worked example in this morning's Technical Indicators in R materials div
 
 ## Running locally
 
-```
-npm install
-npm run dev
-```
+Step by step, the first time:
+
+1. Open a terminal. On a Mac, press `Cmd + Space`, type `Terminal`, and press `Enter`.
+
+2. Change into this project folder, the one that contains `package.json`. For example:
+
+   ```
+   cd ~/Desktop/vienna-genai-finance-course/lessons/repo1_reference
+   ```
+
+3. Install the dependencies. You only need to do this once:
+
+   ```
+   npm install
+   ```
+
+4. Start the local development server:
+
+   ```
+   npm run dev
+   ```
+
+5. The terminal prints a local address, usually `http://localhost:5173`. Open that address in your web browser. The page reloads automatically every time you save a file.
+
+To stop the server, click back on the terminal and press `Ctrl + C`.
 
 ## Deploying
 
