@@ -21,6 +21,8 @@ Within the R "scripting" area in the opened up file, paste your keys.  Replace t
 
 `GEMINI_API='AQ...3w'`
 
+`TWELVE_DATA_API='f9...56`
+
 # Step 5 - Close the environment file & restart R
 
 # Step 6 - Check to make sure it works.
@@ -33,4 +35,6 @@ Run this code within the R Console and it should print your keys.
 `Sys.getenv('FMP_API_KEY')`
 
 `Sys.getenv('GEMINI_API')`
+
+`Sys.getenv('TWELVE_DATA_API')`
 

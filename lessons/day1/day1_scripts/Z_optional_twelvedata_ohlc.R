@@ -24,18 +24,18 @@ library(jsonlite)
 # Sign up (free) at https://twelvedata.com/ and generate a key
 # from your account dashboard. Put the key in ~/.Renviron as:
 #
-#   TWELVE_DATA=your_key_here
+#   TWELVE_DATA_API=your_key_here
 #
 # Save the file, then restart R (Session menu > Restart R) so
 # Sys.getenv sees it. Never paste the key into this script and
 # never commit .Renviron.
-TWELVE_DATA_KEY <- Sys.getenv("TWELVE_DATA")
+TWELVE_DATA_KEY <- Sys.getenv("TWELVE_DATA_API")
 
 if (TWELVE_DATA_KEY == "") {
   stop(
-    "TWELVE_DATA environment variable is not set. Sign up at ",
+    "TWELVE_DATA_API environment variable is not set. Sign up at ",
     "https://twelvedata.com/, generate a key, add ",
-    "TWELVE_DATA=your_key to ~/.Renviron, and restart R."
+    "TWELVE_DATA_API=your_key to ~/.Renviron, and restart R."
   )
 }
 

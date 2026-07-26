@@ -22,6 +22,7 @@ Instructor: Ted Kwartler
 | GitHub | [github.com](https://github.com) | Free |
 | newsapi.org | [newsapi.org](https://newsapi.org) | Free dev tier — save your API key |
 | Financial Modeling Prep | [financialmodelingprep.com](https://financialmodelingprep.com) | Free tier — save your API key |
+| Twelve Data | [twelvedata.com](https://twelvedata.com) | Free Basic plan (alternative to FMP for OHLC data), save your API key |
 | Google AI Studio | [aistudio.google.com](https://aistudio.google.com) | Free — generate a Gemini API key and save it |
 
 ---

@@ -4,14 +4,10 @@
 #
 # Purpose: pre-download S&P 500 earnings call transcripts by
 # scraping MarketBeat.com. This is the primary transcript
-# pipeline for the course: FMP's free tier does not include the
-# earnings-call-transcript endpoint (it's a premium add-on), so
-# FIN_Z_download_transcripts.R cannot actually pull transcripts
-# on a free key. This script needs no API key and no daily
 # quota, but it scrapes a live site, so it is deliberately
 # rate-limited and capped per run to stay polite.
 #
-# Symbols come from sp500_companies.csv, same as the FMP script.
+# Symbols come from sp500_companies.csv.
 # For each symbol we read its MarketBeat earnings tab to find
 # the last N_QUARTERS report pages, then scrape the
 # speaker-by-speaker transcript out of each report page.
