@@ -1,0 +1,60 @@
+name: Deploy Repo 1 Reference
+
+# Builds the finished Repo 1 reference app (lessons/repo1_reference) and
+# publishes it to this repository's GitHub Pages site, so the end state can be
+# demonstrated live. Only runs when that folder or this workflow changes.
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'lessons/repo1_reference/**'
+      - '.github/workflows/deploy-repo1-reference.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: lessons/repo1_reference
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Path is relative to the repository root, not the working-directory.
+          path: lessons/repo1_reference/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

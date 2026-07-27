@@ -1,0 +1,20 @@
+{
+  "name": "vienna-genai-repo1-signal-explainer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "chart.js": "^4.4.0",
+    "chartjs-adapter-luxon": "^1.3.1",
+    "chartjs-chart-financial": "^0.2.1",
+    "luxon": "^3.5.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}

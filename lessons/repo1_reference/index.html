@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signal Explainer, Repo 1</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>Signal Explainer</h1>
+    <p class="subtitle">Repo 1, Generative AI in Finance, Day 1 afternoon build</p>
+  </header>
+
+  <main class="app-main">
+    <section class="panel">
+      <form id="signal-form">
+        <div class="field-row">
+          <div class="field">
+            <label for="ticker">Ticker</label>
+            <input id="ticker" name="ticker" type="text" placeholder="e.g. AAPL" required />
+          </div>
+          <div class="field">
+            <label for="ma-fast">MACD fast (days)</label>
+            <input id="ma-fast" name="ma-fast" type="number" min="2" value="12" required />
+          </div>
+          <div class="field">
+            <label for="ma-slow">MACD slow (days)</label>
+            <input id="ma-slow" name="ma-slow" type="number" min="3" value="26" required />
+          </div>
+          <div class="field">
+            <label for="rsi-period">RSI period (days)</label>
+            <input id="rsi-period" name="rsi-period" type="number" min="2" value="14" required />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="twelvedata-key">Twelve Data API key</label>
+          <input id="twelvedata-key" name="twelvedata-key" type="password" placeholder="Twelve Data key" required />
+          <p class="field-hint">Free plan covers all US stocks and ETFs, capped at 8 requests/minute and 800/day. Get a free key at <a href="https://twelvedata.com/pricing" target="_blank" rel="noopener">twelvedata.com</a>.</p>
+        </div>
+
+        <div class="field">
+          <label for="openrouter-key">OpenRouter API key</label>
+          <input id="openrouter-key" name="openrouter-key" type="password" placeholder="sk-or-..." required />
+        </div>
+
+        <button type="submit">Analyze</button>
+        <p class="status" id="status"></p>
+      </form>
+    </section>
+
+    <section class="panel charts">
+      <div class="chart-block">
+        <h2 hidden>Price (candlestick)</h2>
+        <canvas id="price-chart"></canvas>
+        <div class="range-control" id="range-control" hidden>
+          <div class="range-header">
+            <span class="range-caption">Zoom (applies to all charts)</span>
+            <button type="button" id="range-reset" class="range-reset">Reset</button>
+          </div>
+          <div class="dual-range" id="dual-range">
+            <div class="range-track"></div>
+            <div class="range-selected" id="range-selected"></div>
+            <input type="range" id="range-min" min="0" max="1" value="0" step="1" aria-label="Range start" />
+            <input type="range" id="range-max" min="0" max="1" value="1" step="1" aria-label="Range end" />
+          </div>
+          <div class="range-labels">
+            <span id="range-from"></span>
+            <span id="range-to"></span>
+          </div>
+        </div>
+      </div>
+      <div class="chart-block">
+        <h2 hidden>MACD</h2>
+        <canvas id="macd-chart"></canvas>
+      </div>
+      <div class="chart-block">
+        <h2 hidden>RSI</h2>
+        <canvas id="rsi-chart"></canvas>
+      </div>
+    </section>
+
+    <section class="panel" id="research-note">
+      <p class="placeholder">Your research note will appear here once you run an analysis.</p>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>Reference build for Repo 1. Extend this with your own investment thesis in Repo 2 and Repo 3.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
