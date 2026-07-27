@@ -546,17 +546,42 @@ async function callOpenRouter(apiKey, messages, jsonSchema) {
   });
 
   if (!response.ok) {
+    const detail = await readOpenRouterError(response);
     if (jsonSchema) {
-      // This model or route may not support response_format. Fall back to
-      // asking again without it, rather than failing the whole request.
-      console.warn('response_format was rejected, retrying without it.');
-      return callOpenRouter(apiKey, messages, null);
+      // The schema (response_format / require_parameters) may not be supported
+      // on this route. Retry once without it before giving up, but only for the
+      // errors that dropping the schema could actually fix. A bad key, no
+      // credits, or a rate limit will fail again, so surface those straight away.
+      if (response.status === 400 || response.status === 404) {
+        console.warn(`OpenRouter rejected the structured request (${detail}); retrying without response_format.`);
+        return callOpenRouter(apiKey, messages, null);
+      }
     }
-    throw new Error('OpenRouter call failed. Check your API key.');
+    throw new Error(`OpenRouter call failed. ${detail}`);
   }
 
   const data = await response.json();
   return data.choices?.[0]?.message?.content ?? '';
+}
+
+// Pulls the useful part out of an OpenRouter error response: the HTTP status
+// plus the message OpenRouter actually returned, so the UI can say what really
+// failed (bad key, no credits, rate limit, ...) instead of always guessing
+// "check your API key".
+async function readOpenRouterError(response) {
+  let message = '';
+  try {
+    const body = await response.json();
+    message = body?.error?.message || body?.message || '';
+  } catch {
+    // Body was not JSON; the status code below still tells the user something.
+  }
+  const hint = {
+    401: 'Your API key looks invalid or missing',
+    402: 'This model is paid and your OpenRouter account is out of credits',
+    429: 'Rate limited, wait a moment and try again',
+  }[response.status];
+  return [`(HTTP ${response.status})`, hint, message].filter(Boolean).join(' ');
 }
 
 // Strips markdown code fences and leading or trailing text around the JSON,
