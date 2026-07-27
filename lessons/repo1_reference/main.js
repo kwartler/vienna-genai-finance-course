@@ -526,7 +526,12 @@ async function callOpenRouter(apiKey, messages, jsonSchema) {
   const body = {
     model: 'anthropic/claude-sonnet-5',
     messages,
-    max_tokens: 600,
+    // Sonnet 5 is a reasoning model. If max_tokens is too small to also cover
+    // its reasoning tokens, Anthropic rejects the call and OpenRouter surfaces
+    // it as a generic "Provider returned error" (HTTP 400). This note is short,
+    // so turn reasoning off and leave comfortable headroom for the JSON.
+    max_tokens: 2000,
+    reasoning: { enabled: false },
   };
   if (jsonSchema) {
     body.response_format = { type: 'json_schema', json_schema: jsonSchema };
@@ -572,7 +577,15 @@ async function readOpenRouterError(response) {
   let message = '';
   try {
     const body = await response.json();
-    message = body?.error?.message || body?.message || '';
+    const err = body?.error ?? body;
+    message = err?.message || '';
+    // On a "Provider returned error", the upstream provider's own message is
+    // tucked under metadata, not in the top-level message. Surface it so the
+    // real cause (e.g. a token or parameter limit) is visible.
+    const provider = err?.metadata?.provider_name;
+    const raw = err?.metadata?.raw;
+    if (provider) message += ` [provider: ${provider}]`;
+    if (raw) message += ` ${typeof raw === 'string' ? raw : JSON.stringify(raw)}`;
   } catch {
     // Body was not JSON; the status code below still tells the user something.
   }
