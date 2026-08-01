@@ -22,7 +22,7 @@ openRouterModel <- 'openai/gpt-4.1-nano'
 # meta-llama/llama-3.2-1b-instruct
 # google/gemini-3.1-flash-lite
 # anthropic/claude-haiku-4.5
-# openai/gpt-4o-mini-search-preview
+# perplexity/sonar # works for citation
 # openai/gpt-5.6-luna
 
 # Models that generate validated JSON otherwise MUST BE FALSE

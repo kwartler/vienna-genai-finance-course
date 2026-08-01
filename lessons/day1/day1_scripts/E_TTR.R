@@ -53,8 +53,7 @@ browsable(
   )
 )
 
-# Make it an indicator and back test
-# Add another example of rising vs falling within 30/70 with rollmean?
+# Make it an indicator and back test; you can also add rollmean to understand the direction (rising/falling) within 30-70 
 rsiIndicator <- Lag(ifelse(STKrsi > 30 & STKrsi < 70,1,0))
 table(rsiIndicator)
 ret          <- ROC(Cl(stk))*rsiIndicator 

@@ -5,14 +5,17 @@
 
 # Libraries
 library(ggplot2)
-library(echarts4r)
+library(dygraphs)
+library(dplyr)
 
 # Set seed for reproducibility
 set.seed(42)
 
 # Generate some sample OHLC data
 n     <- 250
-dates <- seq.Date(from = as.Date("2026-01-01"), by = "day", length.out = n) 
+dates <- seq.Date(from = as.Date("2026-01-01"), 
+                  by = "day", 
+                  length.out = n) 
 
 # Creating a data frame with fake OHLC data
 fakeOHLC <- data.frame(Date = dates,

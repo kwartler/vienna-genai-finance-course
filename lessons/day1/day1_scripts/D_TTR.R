@@ -70,7 +70,6 @@ CMG <- merge(CMG$CMG.Close, CMGmacdPer)
 CMG$MACDindicator <- CMG$macd - CMG$signal
 
 # Now let's visualize in a stacked dynamic plot
-## START HERE
 browsable(
   tagList(
     dygraph(Cl(CMG), 
