@@ -24,15 +24,18 @@ library(jsonlite)
 # CONFIGURATION
 # ============================================================
 
+# Open this in the browser to see it live
 RISKLINE_URL <- "https://api.riskline.com/alerts/latest.json"
 
 # Save Path
-# Create a folder in your repo called `context_files`
+### CREATE a folder in your repo called `context_files` then
+### Change the path to your folder
 savePth <- '~/Desktop/vienna-genai-finance-course/context_files'
 
 # Countries you care about for a given investment thesis.
 # Change these and re-run to see the filter work.
-COUNTRIES_OF_INTEREST <- c("United States of America", "China", "Taiwan", "Germany")
+COUNTRIES_OF_INTEREST <- c("United States of America", 
+                           "China", "Taiwan", "Germany")
 
 # ============================================================
 # FETCH THE ALERTS
