@@ -1,7 +1,6 @@
 # ============================================================
 # E_rolling_correlation.R
 # Quantitative Extension lesson, Day 2, Data Science Masters
-# track (9:00 to 10:00)
 #
 # Purpose: compute rolling pairwise correlations between the
 # five equities from A_data_prep.R over two window lengths
@@ -18,8 +17,9 @@ library(TTR)
 library(xts)
 
 # ---- Load data from A_data_prep.R ----
-returns_xts <- readRDS("returns_xts.rds")
-tickers <- colnames(returns_xts)
+loadPth     <- '~/Desktop/vienna-genai-finance-course/portfolio_files'
+returns_xts <- readRDS(file.path(loadPth, "returns_xts.rds"))
+tickers     <- colnames(returns_xts)
 
 # ---- Windows (trading days, not calendar days) ----
 SHORT_WINDOW <- 30   # about 6 calendar weeks
@@ -37,7 +37,7 @@ if (nrow(returns_xts) < LONG_WINDOW) {
 
 # ---- All unique pairs of tickers ----
 # combn lists every 2-way combination. With 5 tickers that is
-# 5 choose 2 = 10 pairs. We never correlate a stock with
+# 5 * 2 = 10 pairs. We never correlate a stock with
 # itself, since that is always exactly 1.
 pairs <- combn(tickers, 2)
 n_pairs <- ncol(pairs)
@@ -52,6 +52,11 @@ roll_cor_long <- roll_cor_short
 colnames(roll_cor_short) <- pair_labels
 colnames(roll_cor_long)  <- pair_labels
 
+# Quick Examination
+roll_cor_short
+roll_cor_long
+
+# Now fill them all in
 for (i in 1:n_pairs) {
   a <- pairs[1, i]
   b <- pairs[2, i]
@@ -59,10 +64,10 @@ for (i in 1:n_pairs) {
   roll_cor_long[, i]  <- runCor(returns_xts[, a], returns_xts[, b], n = LONG_WINDOW)
 }
 
-# TIP: the first (window - 1) rows of every column are NA. A
+# The first (window - 1) rows of every column are NA. A
 # rolling window needs a full window of data before it can
 # produce its first value, so every rolling metric "starts
-# late." That is expected, not a bug.
+# late." 
 
 # ---- Plot 1: all pairs, short window ----
 # Watch the whole band move together. When the lines bunch up
@@ -102,9 +107,11 @@ legend("bottomleft",
 
 # TIP: the blue (short) line jumps around; the orange (long)
 # line tells the calmer underlying story. Neither is "right."
-# A risk desk watches the short window for early warnings and
+# An investor watches the short window for early warnings and
 # the long window to avoid overreacting to noise.
 
 # ---- Save for F and the dashboard export ----
-saveRDS(roll_cor_short, "roll_cor_short.rds")
-saveRDS(roll_cor_long, "roll_cor_long.rds")
+saveRDS(roll_cor_short, file.path(loadPth, "roll_cor_short.rds"))
+saveRDS(roll_cor_long, file.path(loadPth, "roll_cor_long.rds"))
+
+# End 

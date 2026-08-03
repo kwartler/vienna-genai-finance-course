@@ -1,7 +1,6 @@
 # ============================================================
 # B_min_variance.R
 # Portfolio Optimization lesson, Day 2, Data Science Masters
-# track (8:00 to 9:00)
 #
 # Purpose: solve for the minimum variance portfolio using the
 # five equities from A_data_prep.R (AAPL, JPM, JNJ, PG, XOM).
@@ -14,8 +13,11 @@
 # required argument names, not names we chose ourselves.
 library(quadprog)
 
+# ---- Load path ----
+loadPth <- '~/Desktop/vienna-genai-finance-course/portfolio_files'
+
 # ---- Load data from A_data_prep.R ----
-returns_df <- readRDS("returns_df.rds")
+returns_df <- readRDS(file.path(loadPth, "returns_df.rds"))
 tickers <- colnames(returns_df)
 n_assets <- length(tickers)
 
@@ -25,17 +27,25 @@ n_assets <- length(tickers)
 # how the five stocks move together.
 cov_matrix <- cov(returns_df)
 
-# TIP: run print(round(cov_matrix, 6)) and compare it to the
-# correlation matrix from A_data_prep.R. Covariance mixes
-# correlation with the size of each stock's own volatility, so
-# the numbers are harder to read on their own, but it is what
-# the optimizer actually solves with.
+# Examine
+print(round(cov_matrix, 6))
+
+# Compare 
+print(round(cor(returns_df), 2))
+
+# Covariance mixes correlation with the size of each 
+# stock's own volatility, so the numbers are harder 
+# to read on their own, but it is what the optimizer 
+# actually solves with.
 
 # ---- Set up the quadratic program ----
-# We are minimizing (1/2) times w' times Sigma times w, so:
+# w (weights): The percentages of your money allocated to each asset.
+# w': The transpose of your weights (just a mathematical way to line them up for matrix multiplication).
+# Sigma (Sigma / Covariance Matrix): A square table that shows how every asset moves relative to every other asset (who moves together, who moves opposite).
+# The Math: Multiplying w' * Sigma * w calculates the total risk (variance) of your portfolio.
 Dmat <- cov_matrix
 dvec <- rep(0, n_assets)
-# No linear term. We only care about variance here, not
+# We only care about variance here, not
 # expected return. Expected return enters in C_max_sharpe.R.
 
 # Constraint 1 (equality): weights sum to 1
@@ -59,7 +69,7 @@ min_var_weights <- round(min_var_weights, 4)
 
 # ---- Sanity check: never trust optimizer output blindly ----
 weights_total <- sum(min_var_weights)
-if (abs(weights_total - 1) > 0.0001) {
+if (abs(weights_total - 1) > 0.0002) {
   cat("WARNING: weights do not sum to 1. Sum is:", weights_total, "\n")
 } else {
   cat("Weights sum to 1, as expected.\n")
@@ -69,6 +79,7 @@ cat("\nMinimum variance portfolio weights:\n")
 print(min_var_weights)
 
 # ---- Compare to holding each stock alone ----
+# Usually 252 trading days per year
 asset_vol_annual <- apply(returns_df, 2, sd) * sqrt(252)
 port_variance_daily <- t(min_var_weights) %*% cov_matrix %*% min_var_weights
 port_vol_annual <- sqrt(port_variance_daily) * sqrt(252)
@@ -86,4 +97,6 @@ print(round(port_vol_annual, 4))
 # not just all weight on whichever stock looked safest alone.
 
 # ---- Save for D_compare_portfolios.R ----
-saveRDS(min_var_weights, "min_var_weights.rds")
+saveRDS(min_var_weights, file.path(loadPth, "min_var_weights.rds"))
+
+# End

@@ -1,0 +1,59 @@
+EXAMPLE PROMPT: Compute the portfolio's return and volatility
+
+Context for the agent:
+The app has already computed a weight for each surviving ticker (the weights
+sum to 1), and each ticker has an array of daily simple returns aligned by
+date.
+
+User story:
+As an investor, I need the expected return and the volatility of the whole
+weighted portfolio so I can judge its risk and reward and explain it to an
+investment committee.
+
+Functional requirement:
+Add a JavaScript function that computes the portfolio's annualized return and
+annualized volatility. Do not ask the language model to compute any of this.
+The steps:
+
+1. Build the portfolio daily return series. For each trading day, the
+   portfolio return is the sum over all tickers of (weight times that ticker's
+   return on that day). This yields one number per day.
+2. Annualized return: take the mean of the daily portfolio returns and
+   multiply by 252 (the approximate number of trading days in a year). The
+   course uses simple returns, so this arithmetic annualization is the
+   intended method.
+3. Annualized volatility: take the sample standard deviation of the daily
+   portfolio return series (divide by n minus 1) and multiply by the square
+   root of 252.
+4. Return the annualized return, the annualized volatility, and the daily
+   portfolio return series, so the values can be charted and interpreted.
+
+Alignment:
+- Only include days where every ticker has a return. Trim to the common set of
+  dates so each day's weighted sum is complete.
+
+Guardrails:
+- Verify that the weights sum to 1 within a small tolerance before computing.
+  If they do not, surface a clear message rather than reporting a misleading
+  number.
+
+Coding conventions for this project:
+- All math runs in JavaScript. The language model only writes the plain
+  English note that interprets the finished numbers. It computes nothing.
+- Use explicit boolean comparisons in conditionals. Assign a named boolean
+  first, then compare it, for example:
+      const weightsAreValid = Math.abs(weightSum - 1) < 1e-9;
+      if (weightsAreValid === true) {
+          // compute return and volatility
+      } else {
+          // surface a clear message
+      }
+- Always use brace-delimited blocks. Never write one-line conditionals.
+- Do not use em dashes in comments or UI strings. Use commas, parentheses,
+  or separate sentences instead.
+
+Acceptance check:
+With a single ticker at weight 1, the portfolio daily return series should
+exactly equal that ticker's own return series, and the annualized return and
+volatility should match that ticker computed on its own. Use this as a sanity
+test before running the multi ticker case.

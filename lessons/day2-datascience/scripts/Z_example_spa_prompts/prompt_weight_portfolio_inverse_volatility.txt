@@ -1,0 +1,52 @@
+EXAMPLE PROMPT: Weight the surviving portfolio by inverse volatility
+
+Context for the agent:
+The app has already fetched daily price history for a set of tickers and
+filtered them down to the names that pass the thesis (RSI below overbought
+and a positive MACD histogram). Each surviving ticker has an array of daily
+simple returns aligned by date.
+
+User story:
+As an investor, I need to weight the surviving stocks so that calmer names
+carry more of the portfolio and jumpier names carry less, without running a
+heavy solver in the browser.
+
+Functional requirement:
+Add a JavaScript function that assigns inverse volatility weights across the
+surviving tickers. Do not ask the language model to compute any of this. The
+steps:
+
+1. For each surviving ticker, compute its volatility as the sample standard
+   deviation of its daily simple returns (divide by n minus 1).
+2. Set each ticker's raw weight to 1 divided by its volatility. A lower
+   volatility produces a larger raw weight, so calmer stocks get more capital.
+3. Normalize: divide each raw weight by the sum of all raw weights, so the
+   final weights sum to 1.
+4. Return an object mapping each ticker to its final weight and the volatility
+   used, so the values can be charted and later interpreted.
+
+Guardrails:
+- If a ticker's volatility is zero or missing, exclude it from the weighting
+  and record that it was dropped, rather than dividing by zero.
+- Before returning, verify that the final weights sum to 1 within a small
+  tolerance (for example 1e-9), and surface a clear message if they do not.
+
+Coding conventions for this project:
+- All math runs in JavaScript. The language model only writes the plain
+  English note that interprets the finished weights. It computes nothing.
+- Use explicit boolean comparisons in conditionals. Assign a named boolean
+  first, then compare it, for example:
+      const hasValidVol = vol > 0;
+      if (hasValidVol === true) {
+          // include this ticker
+      } else {
+          // drop it and record why
+      }
+- Always use brace-delimited blocks. Never write one-line conditionals.
+- Do not use em dashes in comments or UI strings. Use commas, parentheses,
+  or separate sentences instead.
+
+Acceptance check:
+Given three tickers with volatilities of 0.01, 0.02, and 0.04, the raw weights
+are proportional to 100, 50, and 25. After normalizing they should be about
+0.571, 0.286, and 0.143, and they should sum to 1. Print these to confirm.

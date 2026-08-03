@@ -1,0 +1,32 @@
+{
+  "tickers": ["AAPL", "JPM", "JNJ", "PG", "XOM"],
+  "risk_free_rate_annual": 0.035,
+  "weights": {
+    "equal_weight": {
+      "AAPL": 0.2,
+      "JPM": 0.2,
+      "JNJ": 0.2,
+      "PG": 0.2,
+      "XOM": 0.2
+    },
+    "min_variance": {
+      "AAPL": 0.0714,
+      "JPM": 0.172,
+      "JNJ": 0.2854,
+      "PG": 0.2872,
+      "XOM": 0.1841
+    },
+    "max_sharpe": {
+      "AAPL": 0.0417,
+      "JPM": 0.3438,
+      "JNJ": 0.5068,
+      "PG": 0,
+      "XOM": 0.1078
+    }
+  },
+  "stats": {
+    "Return": [0.2001, 0.1792, 0.286],
+    "Volatility": [0.1367, 0.1289, 0.1451],
+    "Sharpe": [1.207, 1.119, 1.7298]
+  }
+}

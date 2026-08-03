@@ -1,7 +1,6 @@
 # ============================================================
 # F_rolling_metrics.R
 # Quantitative Extension lesson, Day 2, Data Science Masters
-# track (9:00 to 10:00)
 #
 # Purpose: compute two rolling portfolio diagnostics for the
 # equal-weight basket of the five equities from A_data_prep.R:
@@ -21,10 +20,11 @@ library(zoo)
 library(jsonlite)
 
 # ---- Load data from earlier scripts ----
-returns_xts       <- readRDS("returns_xts.rds")        # 5 stocks (from A)
-benchmark_returns <- readRDS("benchmark_returns.rds")  # SPY (from A)
-roll_cor_short    <- readRDS("roll_cor_short.rds")     # from E
-roll_cor_long     <- readRDS("roll_cor_long.rds")      # from E
+loadPth     <- '~/Desktop/vienna-genai-finance-course/portfolio_files'
+returns_xts       <- readRDS(file.path(loadPth, "returns_xts.rds")) # 5 stocks       
+benchmark_returns <- readRDS(file.path(loadPth,"benchmark_returns.rds"))  # SPY
+roll_cor_short    <- readRDS(file.path(loadPth,"roll_cor_short.rds"))     # E
+roll_cor_long     <- readRDS(file.path(loadPth,"roll_cor_long.rds"))      # E
 
 tickers <- colnames(returns_xts)
 n_assets <- length(tickers)
@@ -32,7 +32,7 @@ n_assets <- length(tickers)
 # ---- Windows and rate (match E and C so the story lines up) ----
 SHORT_WINDOW <- 30
 LONG_WINDOW  <- 90
-RISK_FREE_RATE_ANNUAL <- 0.035
+RISK_FREE_RATE_ANNUAL <- readRDS(file.path(loadPth, "risk_free_rate.rds")) # D
 RISK_FREE_RATE_DAILY <- RISK_FREE_RATE_ANNUAL / 252
 
 # ---- Build the equal-weight portfolio return series ----
@@ -57,7 +57,7 @@ colnames(roll_sharpe) <- "RollingSharpe"
 # ratio by the square root of trading days per year is the
 # standard convention.
 
-# TIP: a rolling Sharpe near or below 0 means that, over the
+# A rolling Sharpe near or below 0 means that, over the
 # last SHORT_WINDOW days, the portfolio was not paying you for
 # the risk you took. A single all-in Sharpe number (like the
 # one in D) would hide those stretches entirely.
@@ -68,6 +68,10 @@ colnames(roll_sharpe) <- "RollingSharpe"
 paired <- merge(port_returns, benchmark_returns, join = "inner")
 colnames(paired) <- c("port", "mkt")
 
+# Examine returns of the portfolio and the spy market
+paired
+
+# Function to calculate the beta: ratio of co-variance to market variance
 calcBeta <- function(window_data) {
   # window_data is a 2-column chunk: port returns and mkt returns
   covariance <- cov(window_data[, "port"], window_data[, "mkt"])
@@ -76,6 +80,7 @@ calcBeta <- function(window_data) {
   return(beta)
 }
 
+# Apply it rolling with the short window
 roll_beta <- rollapply(paired, width = SHORT_WINDOW, FUN = calcBeta,
                        by.column = FALSE, align = "right", fill = NA)
 colnames(roll_beta) <- "RollingBeta"
@@ -102,12 +107,9 @@ abline(h = 1, col = "grey60", lty = 2)
 # This file is the HUMAN REVIEW SURFACE. R did every
 # calculation; the JSON is just the finished numbers, in a
 # format a person can read and a language model can explain.
-# The course principle holds: the LLM handles language and
-# interpretation, never the math. It reads these results, it
-# does not recompute them.
 
 # We export the most recent value of each rolling metric plus
-# a small tail of history, so the file stays readable.
+# a small tail of history, so the file stays readable & small.
 latest_i <- nrow(roll_sharpe)
 
 export_list <- list(
@@ -123,12 +125,11 @@ export_list <- list(
 )
 names(export_list$correlation_latest) <- colnames(roll_cor_short)
 
-write_json(export_list, "rolling_metrics.json", pretty = TRUE, auto_unbox = TRUE)
-cat("\nWrote rolling_metrics.json\n")
+write_json(export_list, file.path(loadPth , "rolling_metrics.json"), pretty = TRUE, auto_unbox = TRUE)
 
 # HOW WE USE IT IN CLASS (fastest path, no building required):
 # open a chatbot such as duck.ai, paste the JSON, and ask for
-# a plain-English read. Try this prompt:
+# a plain-English read. Example prompt:
 #
 #   "You are a portfolio risk analyst. Below is JSON with an
 #    equal-weight portfolio's latest rolling Sharpe ratio,
@@ -143,10 +144,5 @@ cat("\nWrote rolling_metrics.json\n")
 #
 # Same JSON could instead feed a vibe-coded SPA: a Chart.js
 # dashboard of these metrics with an OpenRouter research note.
-# We are NOT building that today; the chatbot read is the
-# point. Either way, a human looks before anything acts.
 #
-# This is the monitoring surface Knight Capital never had. In
-# 2012 automated logic executed for 45 minutes with no human
-# reading a dashboard like this one. The metrics exist so a
-# person can see trouble and step in before it compounds.
+# End

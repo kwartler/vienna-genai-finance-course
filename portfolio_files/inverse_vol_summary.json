@@ -1,0 +1,38 @@
+{
+  "method": "inverse_volatility",
+  "note": "Inverse volatility weights each stock by 1 over its volatility, then normalizes. It is the accepted stand in for minimum variance in the browser build because it needs no covariance matrix and no solver. Minimum variance is included here, loaded from B, for comparison.",
+  "tickers": ["AAPL", "JPM", "JNJ", "PG", "XOM"],
+  "inverse_volatility": {
+    "weights": {
+      "AAPL": 0.1567,
+      "JPM": 0.1802,
+      "JNJ": 0.2412,
+      "PG": 0.2379,
+      "XOM": 0.184
+    },
+    "annual_return": 0.1904,
+    "annual_volatility": 0.1318
+  },
+  "minimum_variance": {
+    "weights": {
+      "AAPL": 0.0714,
+      "JPM": 0.172,
+      "JNJ": 0.2854,
+      "PG": 0.2872,
+      "XOM": 0.1841
+    },
+    "annual_return": 0.1792,
+    "annual_volatility": 0.1289
+  },
+  "equal_weight": {
+    "weights": {
+      "AAPL": 0.2,
+      "JPM": 0.2,
+      "JNJ": 0.2,
+      "PG": 0.2,
+      "XOM": 0.2
+    },
+    "annual_return": 0.2001,
+    "annual_volatility": 0.1367
+  }
+}

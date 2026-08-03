@@ -1,0 +1,22 @@
+{
+  "tickers": ["AAPL", "JPM", "JNJ", "PG", "XOM"],
+  "window_days": 30,
+  "risk_free_rate_annual": 0.035,
+  "latest": {
+    "rolling_sharpe": 2.839,
+    "rolling_beta_vs_spy": -0.402
+  },
+  "correlation_latest": {
+    "AAPL-JPM": -0.061,
+    "AAPL-JNJ": 0.037,
+    "AAPL-PG": 0.348,
+    "AAPL-XOM": -0.078,
+    "JPM-JNJ": -0.025,
+    "JPM-PG": 0.069,
+    "JPM-XOM": -0.048,
+    "JNJ-PG": 0.481,
+    "JNJ-XOM": 0.295,
+    "PG-XOM": 0.128
+  },
+  "correlation_pairs": ["AAPL-JPM", "AAPL-JNJ", "AAPL-PG", "AAPL-XOM", "JPM-JNJ", "JPM-PG", "JPM-XOM", "JNJ-PG", "JNJ-XOM", "PG-XOM"]
+}

@@ -1,7 +1,6 @@
 # ============================================================
 # D_compare_portfolios.R
 # Portfolio Optimization lesson, Day 2, Data Science Masters
-# track (8:00 to 9:00)
 #
 # Purpose: put the two optimized portfolios side by side,
 # along with a naive equal weight benchmark, and compare
@@ -9,15 +8,17 @@
 # Run A, B, and C first: this script only reads their output.
 # ============================================================
 
-# ---- Load everything the earlier scripts saved ----
-returns_df         <- readRDS("returns_df.rds")
-min_var_weights    <- readRDS("min_var_weights.rds")
-max_sharpe_weights <- readRDS("max_sharpe_weights.rds")
-RISK_FREE_RATE_ANNUAL <- readRDS("risk_free_rate.rds")
-# The rate is read back from C's saved file instead of being
-# retyped here, so the table below is guaranteed to use the
-# same number the optimizer solved with.
+# ---- Libraries ----
+library(jsonlite)
 
+# ---- Load everything the earlier scripts saved ----
+loadPth            <- '~/Desktop/vienna-genai-finance-course/portfolio_files'
+returns_df         <- readRDS(file.path(loadPth, "returns_df.rds"))
+min_var_weights    <- readRDS(file.path(loadPth, "min_var_weights.rds"))
+max_sharpe_weights <- readRDS(file.path(loadPth, "max_sharpe_weights.rds"))
+RISK_FREE_RATE_ANNUAL <- readRDS(file.path(loadPth, "risk_free_rate.rds"))
+
+# Extract info
 tickers <- colnames(returns_df)
 n_assets <- length(tickers)
 
@@ -54,30 +55,17 @@ calcPortfolioStats <- function(weights, returns_df, rf_annual) {
               Sharpe = sharpe_annual)
   return(result)
 }
-# TIP: all three portfolios are scored by the SAME function
-# on the SAME data. Any difference in the table below comes
-# purely from the weights, nothing else. That is what makes
-# the comparison fair.
 
-# ---- Build the comparison table ----
-stats_equal      <- calcPortfolioStats(equal_weights, returns_df, RISK_FREE_RATE_ANNUAL)
-stats_min_var    <- calcPortfolioStats(min_var_weights, returns_df, RISK_FREE_RATE_ANNUAL)
-stats_max_sharpe <- calcPortfolioStats(max_sharpe_weights, returns_df, RISK_FREE_RATE_ANNUAL)
+# Quick review of the objects - simple equal weights
+equal_weights
+tail(returns_df)
+RISK_FREE_RATE_ANNUAL
 
-summary_table <- rbind(EqualWeight = stats_equal,
-                       MinVariance = stats_min_var,
-                       MaxSharpe   = stats_max_sharpe)
-summary_table <- round(summary_table, 4)
+# Minimizing variance weights
+min_var_weights
 
-cat("\nAnnualized portfolio comparison:\n")
-print(summary_table)
-
-# TIP: read the table one column at a time. MinVariance
-# should win the Volatility column, MaxSharpe should win the
-# Sharpe column, and EqualWeight usually lands in the middle
-# on both. If either optimizer LOSES its own column,
-# something upstream is wrong, and noticing that is more
-# valuable than the table itself.
+# Balancing the risk & return weights
+max_sharpe_weights
 
 # ---- Side by side weights chart ----
 weights_matrix <- rbind(EqualWeight = equal_weights,
@@ -93,16 +81,40 @@ barplot(weights_matrix,
         legend.text = rownames(weights_matrix),
         args.legend = list(x = "topright", bty = "n"))
 
-# TIP: the visual story to look for. Equal weight is flat by
-# construction. Minimum variance spreads out but tilts toward
-# the calmer names. Max Sharpe usually concentrates hard into
+# Equal weight is flat by
+# construction. Minimum variance spreads out but sskew toward
+# the calmer tickers Max Sharpe usually concentrates hard into
 # two or three tickers: it is chasing return per unit of risk
 # and has no reason to hold anything mediocre.
 
-# ---- Export the results so a person (or an LLM) can read them ----
-# jsonlite ships with most R installs; install.packages("jsonlite") if not.
-library(jsonlite)
+# ---- Build the comparison table ----
+stats_equal      <- calcPortfolioStats(equal_weights, 
+                                       returns_df, 
+                                       RISK_FREE_RATE_ANNUAL)
 
+stats_min_var    <- calcPortfolioStats(min_var_weights, 
+                                       returns_df, 
+                                       RISK_FREE_RATE_ANNUAL)
+
+stats_max_sharpe <- calcPortfolioStats(max_sharpe_weights, 
+                                       returns_df, 
+                                       RISK_FREE_RATE_ANNUAL)
+
+summary_table <- rbind(EqualWeight = stats_equal,
+                       MinVariance = stats_min_var,
+                       MaxSharpe   = stats_max_sharpe)
+summary_table <- round(summary_table, 4)
+
+cat("\nAnnualized portfolio comparison:\n")
+print(summary_table)
+
+# read the table one column at a time. MinVariance
+# should win the Volatility column, MaxSharpe should win the
+# Sharpe column, and EqualWeight usually lands in the middle
+# on both. 
+
+
+# ---- Export the results so a person (or an LLM) can read them ----
 export_list <- list(
   tickers = tickers,
   risk_free_rate_annual = RISK_FREE_RATE_ANNUAL,
@@ -114,7 +126,9 @@ export_list <- list(
   stats = as.list(as.data.frame(summary_table))
 )
 
-write_json(export_list, "portfolio_summary.json", pretty = TRUE, auto_unbox = TRUE)
+write_json(export_list, file.path(loadPth,"portfolio_summary.json"), 
+           pretty = TRUE, 
+           auto_unbox = TRUE)
 cat("\nWrote portfolio_summary.json\n")
 
 # WHY EXPORT? R did every calculation here; this JSON is just
@@ -122,7 +136,7 @@ cat("\nWrote portfolio_summary.json\n")
 # the math lives in R, and an LLM only reads and interprets the
 # result, it never recomputes it. The SPA you build later will
 # fetch its own live data instead of this file, but the split
-# is the same: numbers are computed, the model explains them.
+# is the same: numbers are computed in javascript, the model explains them.
 #
 # To see the interpretation step, open a chatbot such as
 # duck.ai, paste the JSON, and try this prompt:

@@ -1,13 +1,12 @@
 # ============================================================
 # C_max_sharpe.R
 # Portfolio Optimization lesson, Day 2, Data Science Masters
-# track (8:00 to 9:00)
 #
 # Purpose: solve for the maximum Sharpe ratio (tangency)
 # portfolio for the five equities from A_data_prep.R, using
 # the PortfolioAnalytics wrapper. Run A_data_prep.R first.
 # A by-hand quadprog version of the same problem is included
-# at the bottom, commented out, for the curious student.
+# at the bottom, commented out for further exploration.
 # ============================================================
 
 # ---- Libraries ----
@@ -16,14 +15,14 @@
 # the math to a solver behind the scenes. ROI is the bridge
 # layer, and ROI.plugin.quadprog is the actual solver, the
 # same quadprog engine B_min_variance.R called directly.
-# First time only:
-# install.packages(c("PortfolioAnalytics", "ROI", "ROI.plugin.quadprog"))
 library(PortfolioAnalytics)
 library(ROI)
 library(ROI.plugin.quadprog)
+library(ROI.plugin.glpk)
 
 # ---- Load data from A_data_prep.R ----
-returns_xts <- readRDS("returns_xts.rds")
+loadPth <- '~/Desktop/vienna-genai-finance-course/portfolio_files'
+returns_xts <- readRDS(file.path(loadPth,"returns_xts.rds"))
 tickers <- colnames(returns_xts)
 n_assets <- length(tickers)
 
@@ -36,7 +35,7 @@ RISK_FREE_RATE_ANNUAL <- 0.035
 # (series DTB3), then enter it here as a decimal.
 RISK_FREE_RATE_DAILY <- RISK_FREE_RATE_ANNUAL / 252
 # Dividing by 252 trading days ignores compounding. That is a
-# common classroom simplification, fine for comparing
+# classroom simplification, fine for comparing
 # portfolios against each other.
 
 # ---- Excess returns ----
@@ -48,6 +47,7 @@ RISK_FREE_RATE_DAILY <- RISK_FREE_RATE_ANNUAL / 252
 # constant changes no asset's volatility.
 excess_xts <- returns_xts - RISK_FREE_RATE_DAILY
 
+# We have to check and see if all options are below the risk free rate
 if (any(colMeans(excess_xts) > 0) == TRUE) {
   cat("At least one asset beats the risk free rate, continuing.\n")
 } else {
@@ -59,6 +59,7 @@ if (any(colMeans(excess_xts) > 0) == TRUE) {
 # and the wrapper works out HOW.
 port_spec <- portfolio.spec(assets = tickers)
 
+?add.constraint
 port_spec <- add.constraint(portfolio = port_spec, type = "full_investment")
 # Weights must sum to 1: all capital is deployed.
 
@@ -66,11 +67,13 @@ port_spec <- add.constraint(portfolio = port_spec, type = "long_only")
 # No short selling: every weight is greater than or equal
 # to 0. Same rule B enforced with its diagonal matrix.
 
-port_spec <- add.objective(portfolio = port_spec, type = "return", name = "mean")
-port_spec <- add.objective(portfolio = port_spec, type = "risk", name = "StdDev")
+# if you maximize for risk alone you go to risk free asset (t bill)
+# if you maximize for returns alone you take on a lot of risk for the return
 # With BOTH a return objective and a risk objective in place,
 # the maxSR flag below tells the optimizer to trade them off
 # as a Sharpe ratio rather than optimizing either one alone.
+port_spec <- add.objective(portfolio = port_spec, type = "return", name = "mean")
+port_spec <- add.objective(portfolio = port_spec, type = "risk", name = "StdDev")
 
 # ---- Solve ----
 opt_result <- optimize.portfolio(R = excess_xts,
@@ -83,7 +86,7 @@ max_sharpe_weights <- round(max_sharpe_weights, 4)
 
 # ---- Sanity checks: never trust optimizer output blindly ----
 weights_total <- sum(max_sharpe_weights)
-if (abs(weights_total - 1) > 0.0001) {
+if (abs(weights_total - 1) >= 0.0002) {
   cat("WARNING: weights do not sum to 1. Sum is:", weights_total, "\n")
 } else {
   cat("Weights sum to 1, as expected.\n")
@@ -114,13 +117,12 @@ cat("Annualized Sharpe ratio:", round(port_sharpe_annual, 4), "\n")
 # TIP: this portfolio chases return per unit of risk, not low
 # risk on its own, so do not be surprised if the weights land
 # heavily on two or three tickers while others sit at or near
-# zero. Compare that concentration to the minimum variance
-# weights from B; the difference in behavior is the whole
-# point of this lesson.
+# zero. This could give us concentraion while weights from B 
+# did not.  
 
 # ---- Save for D_compare_portfolios.R ----
-saveRDS(max_sharpe_weights, "max_sharpe_weights.rds")
-saveRDS(RISK_FREE_RATE_ANNUAL, "risk_free_rate.rds")
+saveRDS(max_sharpe_weights, file.path(loadPth, "max_sharpe_weights.rds"))
+saveRDS(RISK_FREE_RATE_ANNUAL, file.path(loadPth,"risk_free_rate.rds"))
 # D reads the rate back from this file, so the comparison
 # table is guaranteed to use the same number this solver
 # solved with.
