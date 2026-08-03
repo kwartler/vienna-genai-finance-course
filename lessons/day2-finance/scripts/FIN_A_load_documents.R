@@ -126,7 +126,7 @@ this_call$role_group <- ifelse(role_group == TRUE, "Analyst", "Company")
 cat("Turns by group:\n")
 print(table(this_call$role_group))
 
-# TIP: In FIN_F we score sentiment
+# TIP: In FIN_E we score sentiment
 # separately for each group. Management is almost always
 # positive about their own quarter. The interesting question
 # is whether the analysts agree.
@@ -222,7 +222,7 @@ cat("Turns per chunk:\n")
 print(table(this_call$chunk))
 
 # TIP: chunking costs you something too. A model reading
-# chunk 3 has no memory of chunk 1. If an analyst refers back
+# chunk 2 has no memory of chunk 1. If an analyst refers back
 # to something said forty minutes earlier, that connection is
 # gone. Every context strategy trades away something. Knowing
 # what you traded is the skill.
