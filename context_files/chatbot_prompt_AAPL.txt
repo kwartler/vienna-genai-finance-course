@@ -1,0 +1,1064 @@
+============================================================
+SYSTEM PROMPT (paste as the system message)
+============================================================
+
+You are an equity research assistant preparing notes for an analyst.
+You will be given a JSON packet containing an earnings call context, sentiment measurements, and extracted facts for Apple (AAPL).
+
+Rules:
+1. Use only the provided packet. Do not add outside knowledge or search the web.
+2. Attribute every claim to which section it came from (context, sentiment, or extraction).
+3. Distinguish what management asserted from what analysts questioned.
+4. Quote forward looking statements verbatim when you cite them.
+5. If the packet does not answer part of the question, say so plainly.
+6. Do not give investment advice or a buy/sell view.
+7. Be concise. Bullet points and short paragraphs, not walls of prose.
+
+============================================================
+USER PROMPT (paste as the user message, followed by the JSON)
+============================================================
+
+Attached below is a research packet for Apple (AAPL).
+Please draft a one page research note covering:
+
+1. What management emphasized in this quarter. Which products, which segments, which figures?
+2. How the tone reads. Is management more positive than the analysts? Which speaker was most positive, which most negative?
+3. The specific forward looking statements management made. Quote them.
+4. Where the context (news, macro alerts) supports or complicates the company's own account.
+5. What you would want to see next quarter to confirm or reject this reading.
+
+Attach or paste the JSON packet after this message.
+
+============================================================
+JSON PACKET
+(if your chatbot does not accept file attachments, paste this JSON directly after the user prompt)
+============================================================
+
+{
+  "meta": {
+    "symbol": "AAPL",
+    "reporting_company": "Apple",
+    "report_date": "2026-04-30",
+    "assembled_at": "2026-08-02 21:22:33 EDT"
+  },
+  "context": {
+    "assembled_text": "=== PRIMARY SOURCE: COMPANY STATEMENTS ===\nGood afternoon, welcome to the Apple Q2 fiscal year 2026 earnings conference call. My name is Suhasini Chandramouli, Director of Investor Relations. Today's call is being recorded. Speaking first today is Apple CEO Tim Cook. John Ternus will be joining after that for a brief set of remarks, and he'll be followed by CFO Kevan Parekh. After that, we'll open the call to questions from analysts. Please note that some of the information you'll hear during our discussion today will consist of forward-looking statements, including, without limitation, those regarding revenue, gross margin, operating expenses, other income and expense, taxes, capital allocation, and future business outlook.\nThese statements involve risks and uncertainties that may cause actual results or trends to differ materially from our forecast, including risks related to the potential impact to the company's business and results of operations from macroeconomic conditions, tariffs and other measures, and legal and regulatory proceedings. For more information, please refer to the risk factors discussed in Apple's most recently filed reports on Form 10-Q and Form 10-K and the Form 8-K filed with the SEC today, along with the associated press release. Additional information will also be in our report on Form 10-Q for the quarter ended March 28th, 2026 to be filed tomorrow and in other reports and filings we make with the SEC. Apple assumes no obligation to update any forward-looking statements which speak only as of the date they are made. I'd now like to turn the call over to Tim for introductory remarks.\nThank you, Suhasini. Good afternoon, everyone, and thanks for joining the call. Before we get into the quarter, I wanted to take a moment to talk about the transition we recently announced. I just celebrated my 28th anniversary of being here at Apple, 15 years as CEO. In fact, this will be my 89th earnings call. I'll always be proud of the impact Apple has had on our users' lives, and I can't begin to express how grateful I am for our amazing teams. It's because of them that there is no company like Apple, and I truly believe there never will be. This moment for the transition is the right one for a number of reasons. First, our business has been performing extremely well. The first half of this year was very strong, growing double digits year-over-year. Second, our roadmap is incredible.\nMost importantly, we have the right leader ready to step into the role. As I have said, there is no 1 on this planet I trust more to lead Apple into the future than John Ternus. John is a brilliant engineer, a deep thinker, a person of remarkable character, and a born leader. I know he will push us to go further than we think is possible in order to deliver the greatest products and services for our users. I have been so proud to call him a colleague and a friend, and I will be even more proud to call him Apple's CEO. Over the coming months, John and I will be working closely together to make sure this transition is perfectly smooth. I very much look forward to stepping into the role of Executive Chairman on September 1st.\nAs I've told John, I will be here to support him in any way he needs and in any way I can. I am incredibly optimistic about Apple's future, and I know we have the right team in place to deliver on the promise of this company. I also want to take just a moment to share my profound gratitude for our shareholders, especially our long-term shareholders, for believing in Apple and for your support over the years. It means a great deal to all of us. With that, I'd like to bring John on the call for a moment to say a few words. John?\nThanks, Tim, and thanks to everyone on the call. In my view, Tim is one of the greatest business leaders of all time. Stepping into the role of CEO is an incredible honor, and it means a great deal to me to have Tim's trust and confidence. I want to echo Tim's sentiment about our shareholders, especially those who have been with us for many years. Thank you so much for your confidence in our company. As you know, one of the hallmarks of Tim's tenure has been a deep thoughtfulness, deliberateness, and discipline when it comes to the financial decision-making of the company. I want you to know that is something Kevan and I intend to continue when I transition into the role in September. This is an especially exciting moment for Apple. As Tim mentioned, we have an incredible roadmap ahead.\nWhile you're not going to get me to talk about the details of that roadmap, suffice it to say this is the most exciting time in my 25-year career at Apple to be building products and services. There are so many opportunities before us, and I couldn't be more optimistic about what's to come. For now, let me simply say I am deeply grateful to Tim, to the executive team, and to everyone at Apple, and I look forward to all of the important work ahead. With that, let me turn it back over to Tim.\nThanks, John. Let me turn to the quarter. Today, Apple is proud to report $111.2 billion in revenue, up 17% from a year ago, and a March quarter record, which was above the high end of our guidance range despite supply constraints. Customer enthusiasm for iPhone has been extraordinary, with revenue growing 22% year-over-year to achieve a March quarter record. Services reached an all-time revenue record, growing 16% from a year ago, while EPS set a March quarter record of $2.01, up 22% year-over-year. We set March quarter revenue records and grew double digits in every geographic segment, including strong double-digit growth in Greater China and the rest of Asia Pacific.\nWe also achieved March quarter revenue records in both developed and emerging markets and saw double-digit growth in nearly every emerging market we track, including India. We recently marked Apple's 50th anniversary with celebrations in our retail stores and with users around the world. It was a special moment for us to reflect on the incredible journey we've shared with our users, to thank everyone who's been a part of it, and to look forward to writing the next chapter in our story of innovation. We have always believed that people who think different can change the world, and we have been proud to build tools and technologies that allow them to do just that. In March, we put an amazing showcase of human creativity and ingenuity in action with updates across iPhone, iPad, and Mac.\nThrough an unforgettable week of innovation, we also unveiled MacBook Neo, giving us an opportunity to bring the power of Mac to more people than ever before. I'll have more to say on that and all the incredible things we delivered for our customers over the last few months. Let's take a closer look at results from across our product line, beginning with iPhone. As I mentioned earlier, iPhone had an excellent quarter with $57 billion in revenue, a March quarter record despite supply constraints. During the quarter, we welcomed iPhone 17e, the newest addition to what is already the strongest iPhone lineup we've ever had. It brings outstanding performance and core iPhone experiences at a remarkable value for everyone from enterprise teams to consumers. Across the lineup, this is the most powerful, capable, and versatile iPhone family we've ever created.\nThat starts with the latest in Apple silicon for iPhone, A19 and A19 Pro, which include neural accelerators in the GPU to deliver a huge boost to AI performance. With incredible performance and battery life and deep integration of Apple Intelligence, iPhone continues to set the standard for what a smartphone can be. Customers are capturing stunning photos and videos with our most advanced camera system ever on iPhone 17 Pro and Pro Max, including an 8x optical quality zoom and the all-new Center Stage front camera, unlocking entirely new ways to frame, create, and share their moments. In fact, during their recent mission, Artemis II astronauts captured some truly otherworldly images of Earth and space using iPhone 17 Pro Max. Meanwhile, iPhone Air users are tapping into the pro-level performance in our slimmest iPhone ever.\nWith iPhone 17, we're seeing a strong response, not only from customers upgrading from previous generations, but also from people choosing iPhone for the very first time. We've been enormously pleased with how the entire lineup has been received. In fact, the iPhone 17 family is now the most popular lineup in our history when looking at the launch through the March quarter. According to IDC, we gained market share during the quarter. Mac revenue was $8.4 billion for the March quarter, up 6% from a year-ago, despite supply constraints driven by higher-than-expected levels of demand. We're delighted with the reception of what is the most advanced Mac lineup in our history. We set March quarter records for upgraders and customers new to Mac. According to IDC, we gained market share in the quarter.\nFrom Mac mini to MacBook Pro and everything in between, Mac is the best platform for AI, with Apple silicon delivering exceptional performance, industry-leading efficiency, and the ability to run advanced models locally in ways that simply weren't possible before. It's so exciting to see how strongly users are embracing Mac for these capabilities. There's tremendous enthusiasm for MacBook Neo, which made its debut during the March quarter, opening up an entirely new way to experience Mac at a breakthrough price. We've also further improved MacBook Air, already the world's most popular laptop, with M5, making everyday tasks faster and more responsive than ever. MacBook Pro reaches new heights with M5 Pro and M5 Max, delivering extraordinary performance and dramatically advancing what users can do with AI on a portable system.\nFor desktop users, Studio Display pairs beautifully with Mac, while the all-new Studio Display XDR takes things even further, bringing unmatched image quality and an extraordinarily immersive experience to pro workflows. Turning to iPad, revenue was $6.9 billion, up 8% from a year ago. iPad continues to be a great choice for students, small business owners, artists, and so many others because it empowers entirely new ways to work, learn, create, and connect. It's not just about mobility. It's about versatility, delivering a uniquely flexible experience that adapts to whatever users want to accomplish. Today, our iPad lineup is stronger than ever, led by the arrival of the M4-powered iPad Air. With a remarkable leap in performance, it raises the bar for what users can do on iPad, from advanced creative workflows to powerful productivity and immersive learning.\nWith the addition of our latest Apple silicon, along with the N1 wireless networking chip and C1X modem, users can stay seamlessly connected wherever they are. Across wearables, home, and accessories, revenue for the March quarter came in at $7.9 billion, up 5% from a one year ago. Apple Watch Ultra 3, Apple Watch Series 11, and Apple Watch SE continue to play an essential role in users' lives, going far beyond fitness tracking to deliver meaningful insights and support for their health and well-being. From helping users stay active and reach their fitness goals to delivering powerful, science-backed health insights that can prompt meaningful conversations with care providers, Apple Watch is with them every step of the way. It's tremendously meaningful to see how Apple Watch continues to empower users to better understand their health, make more informed decisions, and in many cases change and even save lives.\nDuring the quarter, we introduced customers to a new level of audio experience with AirPods Max 2, delivering stunning sound quality and our most advanced active noise cancellation yet. At the same time, AirPods Pro 3 combine an incredibly immersive listening experience with intelligent features that adapt to how users move, train, and live. Whether it's a call across town or a conversation across continents, AirPods make it effortless to stay connected. AirPods can bridge languages too, thanks to live translation powered by Apple Intelligence. In addition to live translation, Apple Intelligence brings together dozens of powerful capabilities from visual intelligence to cleanup in photos that are seamlessly integrated into the moments that matter most to our users every day. We look forward to bringing a more personalized Siri to users coming this year.\nWhat truly sets Apple apart is how Apple Intelligence is woven into the core of our platforms, powered by Apple silicon and designed from the ground up to deliver intelligence that is fast, personal, and private. This is not AI as a standalone feature, but AI as an essential, intuitive part of the experience across our devices. It builds on years of innovation, from the neural engine to advanced on-device processing, enabling capabilities that are not only incredibly powerful, but also respectful of user privacy. Increasingly, that same foundation is drawing developers and researchers to our products as powerful platforms for building and running agentic AI, thanks to the unique combination of performance, efficiency, and on-device capabilities. When you combine this level of integration with our relentless focus on the customer experience, it becomes clear why Apple platforms are the best place to experience AI.\nNow let's turn to services, which set an all-time revenue record with $31 billion. We saw double-digit growth in both developed and emerging markets and set new all-time revenue records across most of the services categories. There's no better place to find celebrated storytellers than Apple TV. Audiences are applauding the return of shows like Your Friends & Neighbors, Shrinking, and For All Mankind, while discovering new favorites like Widow's Bay. Apple TV has also earned its place among the most decorated names in entertainment, with more than 800 wins and more than 3,400 nominations in the six years since launch. This is a great time for sports fans on Apple TV too. Formula One season kicked off in March, and Apple TV subscribers in the U.S. have one of the best views of the track.\nThe new MLS season is also well underway, and subscribers in more than 100 countries and regions can watch every match with no blackouts. Friday Night Baseball returned for its fifth year on Apple TV with a full season of marquee matchups. In retail, we had a March quarter revenue record and saw very high levels of store traffic throughout the quarter. From New York to Chengdu to Paris, it was wonderful to see stores around the world at the center of Apple's 50th anniversary celebrations. We were also thrilled to open the doors to our sixth store in India. It has been wonderful to see how we've continued to grow in India in recent years, part of our larger efforts to connect with even more customers in emerging markets all over the world.\nAt Apple, we believe powerful innovation and uncompromising quality can go hand in hand with sustainability. Over the last year, we've reached new milestones in the environment, including the use of recycled content in 30% of the materials in all of our products shipped in 2025, the most we've ever had. That includes the use of 100% recycled cobalt in all Apple-designed batteries and 100% recycled rare earth elements in all magnets. We've also achieved our goal of removing plastic from packaging with every Apple product now shipping in fiber-based packaging. All of this is a testament to the outstanding forward-thinking and innovative work of our teams. We're also making great progress in advancing American supply chain innovation.\nAs part of our $600 billion commitment to the U.S., we were pleased to share recently that Mac mini production is coming to America later this year, expanding our factory operations in Houston with a brand-new facility. In March, we were thrilled to welcome four new companies to our American manufacturing program to help manufacture essential materials and components for Apple products sold worldwide. These include sensors that support key iPhone features like camera stabilization and integrated circuits essential for features like crash detection and activity tracking. These efforts build on the progress we've made in the American manufacturing program, including the work we're doing to advance an end-to-end silicon supply chain across the U.S. At TSMC's Arizona facility, for example, Apple is on track to purchase well over 100 million advanced chips.\nWe're accelerating our long-standing support for U.S. innovation, we're also investing in America's workforce. We're looking forward to opening the doors to an all-new advanced manufacturing center in Houston later this year, which will provide hands-on training led by Apple experts and tailor-made for students, supplier employees, and American businesses. Whether around the world or in our own backyard, we're proud of the difference Apple has made to enrich lives and support the communities we serve. Looking ahead, we're delighted to welcome developers back to Apple Park for WWDC 2026. We can't wait to share what we've been working on, from AI advancements to exciting new software and developer tools. It's going to be an incredible week. As always, we remain in relentless pursuit of even more powerful innovations guided by our North Star, our users.\nAs we celebrated 50 years of Apple, we are even more excited and more optimistic about the next 50 years and beyond. With that, I'll turn it over to Kevan.\nThanks, Tim. Good afternoon, everyone. Our revenue of $111.2 billion was up 17% year-over-year, a March quarter revenue record. We saw strong performance around the world with March quarter revenue records in every geographic segment. Foreign exchange was about a 2.5 percentage point tailwind to the March quarter growth rate. We also faced supply constraints on iPhone and to a lesser extent on Mac. We believe if you remove the favorable benefit from foreign exchange and add back the unfavorable impact from supply constraints, we would have had a higher growth rate for total company revenue for the quarter. Products revenue was $80.2 billion, up 17% year-over-year, driven by double-digit growth on iPhone, setting a new March quarter record.\nOur install base of over 2.5 billion active devices has reached another all-time high across all major product categories and geographic segments. Services revenue was $31 billion, up 16% year-over-year. We saw strong performance across the board with double-digit growth in the vast majority of the markets we track. Company gross margin was 49.3%, above the high end of our guidance range and up 110 basis points sequentially. Products gross margin was 38.7%, down 200 basis points sequentially. Services gross margin was 76.7%, up 20 basis points sequentially. Operating expenses landed at $18.9 billion, up 24% year-over-year. This was slightly above the high end of our guidance range due to a one-time expense in SG&A.\nNet income was $29.6 billion, and diluted earnings per share was $2.01, up 22% year-over-year. Both net income and diluted EPS achieved March quarter records and drove a very strong level of operating cash flow at $28.7 billion. I'm going to provide some more details for each of our revenue categories. iPhone revenue was $57 billion, up 22% year-over-year, driven by the iPhone 17 family. iPhone grew double digits in the majority of markets we track, including the U.S., Latin America, Greater China, Western Europe, India, Japan, and Southeast Asia. The iPhone active install base grew to an all-time high, and we set March quarter record for iPhone upgraders. According to a recent survey from Worldpanel, iPhone was a top-selling model in the U.S., urban China, the U.K., Australia, and Japan.\nWe have been extremely pleased with the positive reception of the iPhone 17 family. In fact, customer satisfaction for the iPhone 17 family in the U.S. was recently measured at 99% by 451 Research. Mac revenue was $8.4 billion, up 6% year-over-year, driven by the strength of the recent product launches, including MacBook Neo. We grew in both developed and emerging markets with double-digit growth in many emerging markets, including India and Indonesia. As Tim mentioned earlier, we had a March quarter record for customers new to the Mac. And this helped drive a new all-time record for the overall Mac install base. In the U.S., customer satisfaction for Mac was recently reported at 97%. iPad revenue was $6.9 billion, up 8% year-over-year, driven by the continued strength of the A16-powered iPad and the M5-powered iPad Pro.\nThe iPad install base reached a new all-time high as iPad continued to reach new customers around the world. During the quarter, over half of the customers who purchased an iPad were new to the product. Many of these customers are in our emerging markets, where we grew iPad revenue by double digits, including in India, Mexico, and Thailand. Based on the latest reports from 451 Research, customer satisfaction was 98% in the U.S. Wearables, home, and accessories revenue was $7.9 billion, up 5% year-over-year, driven by strength in wearables and accessories. We were pleased to see strength in our emerging markets, where we set a new March quarter revenue record. The wearables install base reached a new all-time high, with over half of the customers purchasing an Apple Watch during the quarter being new to the product.\nIn the U.S., customer satisfaction on Apple Watch was measured at 96%. Our services revenue reached an all-time high of $31 billion, up 16% year-over-year. The strong performance was broad-based, with all-time records in both developed and emerging markets. As Tim mentioned, we also set all-time revenue records in most of the services categories. We're optimistic about the future of our services business. With our large install base of over 2.5 billion active devices, we have an incredibly strong foundation for growth opportunities. Both transacting and paid accounts reached new all-time highs in the quarter as we continue to see more customers leveraging our services offerings. We continue to improve the quality and expand the breadth of our services from the expansion of features like Tap to Pay, now available in over 50 markets, to deeper support for enterprise customers.\nBuilding on this, we've launched Apple Business, a new all-in-one platform that combines our hardware, software, and enterprise services, enabling companies to efficiently manage their deployments and scale their business. We continue to see more organizations and enterprise choosing Apple's devices for performance and productivity. Marsh, a leading professional services firm, deployed a large-scale refresh of corporate devices to iPhone 17 as part of a commitment to security alongside adopting Mac for internal AI development. With Apple silicon and its powerful unified memory architecture, leading AI developers like Perplexity are choosing Mac as their preferred platform to build enterprise-grade AI assistants that power autonomous agents and boost workplace productivity. Across the Mac lineup, customers are finding the right device for their needs.\nFrom MacBook Pro and MacBook Air to our newest edition, MacBook Neo, which delivers an unprecedented combination of quality, value, and industry-leading security that is resonating strongly in enterprise and education. Kansas City Public Schools, for example, is switching their high school students from Windows laptops and Chromebooks to MacBook Neo, completing their transition to an all-Apple district. In India, leading enterprise software provider Freshworks deployed over 5,000 MacBook Pro and MacBook Air to accelerate their AI development. Let's turn to our cash position and capital return program. We ended the quarter with $147 billion in cash and marketable securities. We had $5.8 billion of debt maturities, and commercial paper remained unchanged at $2 billion, resulting in $85 billion in total debt. Therefore, at the end of the quarter, net cash was $62 billion.\nDuring the quarter, we returned $15 billion to shareholders. This included $3.8 billion in dividends and equivalents and $11 billion through open market repurchases of 42 million Apple shares. Our repurchase activity at any time can be affected by a number of factors that we take into account. As you're aware, we recently announced a CEO transition. Taking a step back, we plan to continue our capital allocation philosophy of first making all the necessary investments needed to support the business and then returning excess cash to shareholders over time. Net cash neutral has been a valuable framework for our capital structure, and since 2018, we have significantly right-sized our balance sheet and reduced net cash by over $100 billion.\nAs we move ahead, we are no longer providing net cash neutral as a formal target, and we will independently evaluate cash and debt. Capital returns will continue to be important to our overall approach by delivering long-term shareholder value. Accordingly, our board has authorized an additional $100 billion for share repurchases, and we're also raising our dividend by 4% to $0.27 per share of common stock. This cash dividend will be payable on May 14th, 2026 to shareholders of record as of May 11th, 2026. As we move ahead into the June quarter, I'd like to review our outlook, which includes the types of forward-looking information that Suhasini referred to.\nImportantly, the color we're providing assumes that global tariff rates, policies, and their application remain in effect as of this call. The global macroeconomic outlook does not worsen from today. We expect our June quarter total company revenue to grow by 14%-17% year-over-year, which comprehends our best view of constrained supply. On iPad, keep in mind, we face a difficult compare driven by the launch of the A16-powered iPad in the prior year. We expect services revenue to grow at a year-over-year rate similar to what we reported in the March quarter after removing the favorable year-over-year impact from foreign exchange tailwinds. Keep in mind, during the March quarter, FX was a 2.5 percentage point tailwind to the total company growth rate, and for services, that impact was slightly more favorable.\nWe expect gross margin to be between 47.5% and 48.5%. We expect operating expenses to be between $18.8 billion and $19.1 billion. We expect OINE to be around $250 million, excluding any potential impact from the mark-to-market of minority investments, and our tax rate to be around 17%. With that, Tim and I will take questions.\nThank you, Kevan. We ask that you limit yourself to two questions. Operator, may we have the first question, please?\nCertainly. We'll go ahead and take our first question from Erik Woodring with Morgan Stanley. Please go ahead.\nYeah. Hi, Erik. Thanks for your comments. We were constrained during the March quarter. This was primarily on iPhone and to a lesser extent on the Mac. As we talked about in the last call, the constraints were primarily driven by the availability of the advanced nodes our SOCs are produced on. If you look forward to the June quarter, the majority of our supply constraints will be on several Mac models, given the continued high levels of demand that we're seeing. We have less flexibility in the supply chain than we normally would. For Mac, in the June quarter, there's 2 factors that are driving the constraints.\nOne is that on the Mac mini and the Mac Studio, both of these are amazing platforms for AI and agentic tools, and the customer recognition of that is happening faster than what we had predicted. We saw higher than expected demand. The second reason is that the customer response to MacBook Neo has just been off the charts, with higher than expected demand. The March quarter record for customers, we set a March quarter record for customers new to the Mac, partly due to the Neo. We think, looking forward, that the Mac mini and the Mac Studio may take several months to reach supply-demand balance. Hopefully that gives you a view of both Q2 and Q3 on the supply side.\nErik, thanks for the question. Let me just reiterate what we said, which is really more of a comment on the capital structure. Our goal of net cash neutral has really served us well. It's been a valuable framework for us, you know, and for our capital structure since, you know, 2018. We believe we're at a stage where we're evaluating cash and debt independently is really the right approach for us and allows us to make more optimal economic decisions around how we best utilize our debt and cash portfolios to support the business, you know, based on business factors and market conditions. We also believe we can manage this flexibility while also being very efficient and remaining disciplined.\nWith all that being said, we remain very committed to returning excess cash to shareholders. As we talked about, you know, our investment in the business, I think, as you know, we invest in the business, you know, first and foremost, and then look to, you know, kind of return excess cash to shareholders. I think we have a very good track record of being disciplined. You know, we've returned over $1 trillion to shareholders from the start of the program, over $850 billion of which has been through share repurchases. You know, and the other piece as well that's really important is, you know, as part of that, we also have, you know, increased our buyback authorization by another $100 billion, and that's on top of, you know, the leftover capacity from the prior authorization.\nYou can see, you know, the capital return piece is something, you know, very important to us, and as we talked about in the prepared remarks, important to the overall approach, you know, to delivering long-term shareholder value.\nThanks, Erik.\nThank you.\nAwesome. Thank you, Erik. Operator, could we get the next question, please?\nOur next question is from Ben Reitzes with Melius Research. Please go ahead.\nHi, Ben, it's Tim. you know, we don't get into our future roadmap. I don't wanna, you know, give too much info there, but I would just say that we're thrilled with how the iPhone is doing, growing 22% in the quarter and followed up from a incredible Q1 and having the strongest cycle that we've ever had in our history from the launch through March quarter. We could not be happier with it.\nYeah. Ben, let me talk about memory specifically, which I think is the root of the question. And I'll go back to December for a moment and just walk you through the chronology. In the December quarter, we really had a minimal impact due to memory, and you can kinda see that in the gross margin results. We said it would be a bit more in the March quarter, and we did see higher memory costs in the March quarter, and they were partially offset by benefits from carry-in inventory that we had. For the June quarter, and what's embedded in the guidance that Kevan went through earlier, we expect significantly higher memory costs. They are also partly offset by the benefit of carry-in inventory.\nThen where we don't give color beyond June, I can tell you that beyond the June quarter, we believe memory costs will drive an increasing impact on our business. We'll continue to evaluate this, and as we've said before, we'll look at a range of options.\nYeah. Thank you, Ben.\nThank you, Ben. Operator, could we have the next question, please?\nOur next question comes from Michael Ng with Goldman Sachs. Please go ahead.\nYeah. Right now we're supply constrained on the MacBook Neo. The response has been. We were very bullish on the product before announcing it. We undercalled the level of enthusiasm that would be with it. It's very much focused on getting the Mac to even more people than we were reaching before. We're very focused on customers new to the Mac and customers that have been holding onto their Mac a very long period of time. We're doing well with both of those.\nAs Kevan alluded to in his comments, we're seeing school systems like the Kansas City Public Schools that are switching from Chromebooks and Windows PCs to the MacBook Neo, and I'm hearing anecdotally more and more of those kind of stories, both happening at the school system level and at the individual consumer level. We could not be happier with how things are going at the moment.\nMichael Ng, it's Kevan Parekh. Thanks for the question. In advertising, we did see year-over-year growth in our advertising business. As you alluded to, we recently did introduce additional ads, you know, across the App Store search results to provide developers with more ways to drive downloads on platforms, you know, that users trust. And this summer, as you said, in the U.S. and Canada, Apple Maps will feature ads during key search and discovery moments, creating a new way for local businesses to reach customers and explore new places. Importantly, I think, you know, we believe it's possible to help businesses of all sizes grow via advertising while still delivering a great customer experience, while also importantly respecting people's fundamental right to privacy.\nThanks, Mike.\nThank you, Mike. Operator, could we get the next question, please?\nOur next question is from Wamsi Mohan with Bank of America. Please go ahead.\nWamsi, we will look at a range of options, with memory costs increasing. I really don't wanna go beyond that at this point.\nWe are clearly investing more. You can see that in the OpEx numbers. If you click down on those a step deeper and look at the R&D areas separate than SG&A, you'll find that R&D is even accelerating much higher than the company is. We're clearly investing. We're investing in products and services, and we see opportunities in both of those. We could not be more excited about how the future is playing out.\nI think Wamsi, as we've talked about, you know, building on what Tim said, you know, from the start, we've said we, you know, believe AI is a really important investment area for Apple, and we're gonna be doing that incrementally on top of what we normally invest in our product, you know, roadmap. I think just wanted to reiterate that point as well.\nMm-hmm.\nAwesome.\nYep.\nThank you, Wamsi. Operator, could we get the next question, please?\nOur next question is from Amit Daryanani with Evercore. Please go ahead.\nYeah, if you look at it's the iPhone 17 family that's driving it. That is, as you point out, is despite the supply constraints that we're experiencing. It's the things that are driving people to the 17 are people love the design, people love the performance, they love the durability, they love the camera, they love Center Stage, and they love that Apple Intelligence is integrated across the platform. From a where we're seeing the growth, it is amazing. We're seeing double-digit growth in the majority of the markets we track, from the U.S. to Latin America, to Greater China, to Western Europe, to India, to Japan, to Southeast Asia. We set a new March quarter record for upgraders as well.\nYou know, what's driving all this is that the customer satisfaction for the iPhone 17 family in the U.S., as an example, is 99%. These numbers are just unheard of. We're thrilled with how things are going.\nWell, I think Steve's advice to me lifted a huge burden. So that advice did well, for me and over the 15 years. For John, I think my advice is that, or what I've told him is that one of the most important decisions he'll make is where to spend his time. I would spend it where the greatest benefit to the company and the users are. Never forget the North Star for the company. You know, we're about making the best products in the world that really enrich other people's lives. If you keep focusing on that and make your decisions around that, it will produce a great business, and we'll be able to build more products and do it all over again. Thank you for the question.\nThanks, Amit. Operator, could we get the next question, please?\nOur next question is from David Vogt with UBS. Please go ahead.\nYeah. David, the constraint in the March quarter and the June quarter, the primary constraint is the availability of the advanced nodes our SOCs are produced on, not memory. I don't want to predict our ability to for supply and demand to match because if I look at it realistically, I think on the Mac mini and the Mac Studio, I believe it will take several months to reach supply-demand balance. We're not at the point where we're saying this is going to end anytime soon. It's not because of a problem per se, other than we just under called the demand.\nYou know, there are lead time to this, as you well understand, it takes a while to correct that. The primary constraint from a product point of view in the or the majority of it for this quarter, for the June quarter, will be on the Mac. It's Mac mini, Mac Studio, and the MacBook Neo. It's all of those.\nYeah. Thank you.\nYeah, David, it's Kevan. Thanks for the question. Look, as you know, our services portfolio contains a wide range of businesses that have different, you know, business models and profitability profiles and also are growing at different rates. At any given time, right, the relative performance of those can impact the gross margin. This time in particular, we look at the, you know, Q2 services margin. We talked about the fact that it increased 20 basis points sequentially. That's primarily driven by mix. Again, I think it's hard to speculate, you know, how that evolves over time. You know, we're encouraged by what we're seeing. We do have some services that are improving in profitability as they gain scale.\nAgain, I think we have a wide portfolio that has different characteristics and can grow, you know, at different rates at different times. Overall, we're encouraged by the overall trajectory that we've seen.\nAll right. Thank you, David. Operator, could we get the next question, please?\nOur next question is from Samik Chatterjee with JP Morgan. Please go ahead.\nYeah, it's a good question. We are investing more. You can see that in the OpEx numbers. As I'd mentioned before, the R&D in particular has scaled rather significantly on a year-over-year basis. The collaboration with Google is going well. We're happy with where things are, and we're happy with the work that we're doing independently as well.\nSure, Samik. Well, let me start. On products, for Q2, basically products gross margin did decrease by 200 basis points sequentially, driven by, you know, seasonal loss of leverage and higher memory costs, as Tim had alluded. If I zoom out, though, I think it's important just to look at what drove the overall company gross margin performance, and let me just give you a quick kinda rundown of that. If you look at our overall performance, right, our sequential gross margin impact was 110 basis points positively, and that was driven by favorable mix, lower tariff-related costs, and that was partly offset by seasonal loss of leverage and higher memory costs.\nI did wanna turn it over to Tim, 'cause we do wanna provide some clarity around the lower tariff-related costs, and just make a comment on that as well.\nYeah, thanks, Kevan. For the March quarter, the gross margin of 49.3% did include the impact of tariff-related costs. However, tariffs in the March quarter versus the December quarter were lower because we had lower product volume, as you know, sequentially from Q1 to Q2. There was the full quarter benefit from a reduction in the IEEPA tariff rates, as well as the reduced global tariff rate under Section 122. In terms of applying for a refund of tariffs paid, we're following the established processes, and we plan to reinvest any amount we receive back into U.S. innovation and advanced manufacturing. These would be new investments and would be in addition to our prior commitments in the U.S.\n1 last point on your FX question. We really didn't see any sequential impact related to foreign exchange as a factor going from Q1 gross margin to Q2.\nMm.\nAll right. Thank you. Operator, could we get the last question, please?\nWe'll go ahead and take our last question from Aaron Rakers with Wells Fargo. Please go ahead.\nYeah. We are thrilled with the performance in Greater China. The first half of the year grew at 33%. In the March quarter, revenue was up 28%. It's a quarterly revenue record for us. The performance is really driven by iPhone, which was also a March quarter record. If you look at the individual products, iPhone was the top-selling model in urban China. The Mac mini was the top-selling desktop in China, and the MacBook Air was the top-selling laptop model. We're really doing well, pretty well across the board there. I was over there in March. The traffic in our stores grew by double digit. We were celebrating the Apple's fiftieth anniversary there, and it was just amazing to be a part of the community there.\nI'm really happy with how things have gone the first half of this year.\nYeah. I think it's a huge opportunity for us. You know, we've been focused on this for a while. It's the second-largest smartphone market in the world and the third-largest PC market. Despite doing extremely well there for quite some time, we still have a modest share. I think there's that really speaks to the opportunity that we have. There are a lot of people moving into the middle class there, and we've got some great products for them, both currently and coming. If you look at the majority of customers on all of our categories, from the iPhone to the Mac to the iPad to the Watch, are new to that product there. It speaks very well to growing the install base there.\nNet-net, I'm over the moon excited about India.\nYep.\nThank you, Aaron Rakers. A replay of today's call will be available for 2 weeks on Apple Podcasts, as a webcast on apple.com/investor, and via telephone. The number for the telephone replay is 866-583-1035. Please enter confirmation code 2803309, followed by the pound sign. These replays will be available by approximately 5:00 P.M. Pacific Time today. Members of the press with additional questions can contact Josh Rosenstock at 408-862-1142. Financial analysts can contact me, Suhasini Chandramouli, with additional questions at 408-974-3123. Thanks again for joining us today.\nOnce again, this does conclude today's conference. We do appreciate your participation.\n\n=== SECONDARY SOURCE: PRESS COVERAGE ===\nSource Name: Worldsoccertalk.com\nPublished At: 2026-08-01T22:24:42Z\nArticle Title: Cristiano Ronaldo has earned $435 million more than Lionel Messi since 2023, but there’s a catch\nArticle Description: Since leaving Europe, both stars have signed career-defining contracts with new clubs, creating an astonishing earnings gap that has sparked fresh debate about how each legend has approached the final stage of his career. \nCristiano Ronaldo and Lionel Messi h…\n\n\nSource Name: Biztoc.com\nPublished At: 2026-08-01T20:32:13Z\nArticle Title: Apple CEO sends strong warning on AI and price of Apple products\nArticle Description: Tim Cook spent part of July 30 thanking Apple shareholders at the end of what he confirmed would be his last earnings call as CEO. John Ternus takes over Sept. 1, and Cook moves to executive chairman.\nThe farewell was warm. The statement that followed was not…\n\n\nSource Name: Associated Press\nPublished At: 2026-08-01T20:27:16Z\nArticle Title: America In Focus: US economy expands at sluggish pace, mortgage rate hit the highest level in a year\nArticle Description: The U.S. economy expanded at a sluggish 1.5% pace from April through June as rising imports weighed on growth. Meanwhile, the average long-term U.S. mortgage rate rose for the fourth consecutive week to its highest level in a year, another setback for prospec…\n\n\nSource Name: Slashdot.org\nPublished At: 2026-08-01T20:15:00Z\nArticle Title: Apple's Stock Drops Nearly 10%. How Will It Respond to Memory Shortage?\nArticle Description: Apple's stock \"fell just shy of 10% on Friday,\" reports Yahoo Finance, \"after CEO Tim Cook warned about the impact of the global memory shortage on the company's business.\"\n\nDuring Apple's third quarter earnings call, Cook said the company paid significantly …\n\n\nSource Name: 9to5Mac\nPublished At: 2026-08-01T20:14:48Z\nArticle Title: Apple @ Work: Apple says MacBook Neo is pulling schools away from Windows and Chromebooks\nArticle Description: Apple @ Work is exclusively brought to you by Mosyle, the only Apple Unified Platform. Mosyle is the only solution that integrates in a single professional grade platform all the solutions necessary to seamlessly and automatically deploy, manage, and protect …\n\n\nSource Name: TheStreet\nPublished At: 2026-08-01T20:07:00Z\nArticle Title: Apple CEO sends strong warning on AI and price of Apple products\nArticle Description: Tim Cook spent part of July 30 thanking Apple shareholders at the end of what he confirmed would be his last earnings call as CEO. John Ternus takes over Sep...\n\n\nSource Name: TweakTown\nPublished At: 2026-08-01T19:45:09Z\nArticle Title: Steam Deck LCD battery returns to iFixit, but costs $50 more now\nArticle Description: Steam Deck LCD owners feared their batteries were gone for good, and now that they're finally back in stock, the price has jumped a painful 63%.Continue reading at TweakTown\n\n\nSource Name: Realinvestmentadvice.com\nPublished At: 2026-08-01T19:27:54Z\nArticle Title: The Momentum Crash: Is It Over?\nArticle Description:  At a Glance\n\n\n<ul><!-- wp:list-item -->\r\n\n<li>Is The Momentum Crash Over? <\/li>\n\r\n\n\r\n\n<li>Market Brief & Technical Review<\/li>\n\r\n\n\r\n\n<li>From Lance's Desk: AI Bear Case: What Skeptics Get Right And Wrong - RIA<\/li>\n\r\n\n\r\n\n<li>Market stats, screens, and risk…\n\n\nSource Name: New York Post\nPublished At: 2026-08-01T19:06:56Z\nArticle Title: Giants coach calls out Willy Adames for lack of defensive buy-in\nArticle Description: The San Francisco Giants can’t catch a break right now. On the same day that the 47-63 team decided to suspend Harrison Bader’s pay after he drunkenly crashed his scooter into a fire truck (which then ran over his foot) and lost 7-0 to the San Diego Padres, s…\n\n\nSource Name: TechCrunch\nPublished At: 2026-08-01T18:47:27Z\nArticle Title: Should you still buy your next smartphone — or subscribe to it instead?\nArticle Description: Apple's new Upgrade program is the latest sign that smartphone ownership is changing.\n\n\nSource Name: iLounge\nPublished At: 2026-08-01T18:45:47Z\nArticle Title: Supply Constraints Growing for Apple\nArticle Description: During the third-quarter earnings call for Apple, the company stated that they are anticipating constraints in supply to have a significant effect on its September Quarter Revenue. The constraints will affect the Mac, iPhone, and iPad, as the company has less…\n\n\nSource Name: iLounge\nPublished At: 2026-08-01T18:43:33Z\nArticle Title: CEO Tim Cook Comments on Increased Prices Across Products\nArticle Description: Last month, Apple raised the prices across its devices due to the surge in prices for memory. No comments were made by Tim Cook on whether the iPhones are also getting price increases when the foldable iPhone and the  iPhone 18 models release later this year …\n\n\nSource Name: iLounge\nPublished At: 2026-08-01T18:41:53Z\nArticle Title: Apple Revenue from Qualcomm Dropping Faster than Predicted\nArticle Description: Cristiano Amon, the CEO of Qualcomm, states that their Apple revenue is expected to drop faster than predicted due to supply constraints, reducing the Qualcomm component share used in the next iPhone. The drop is expected to hit at the start of Q4. On Septemb…\n\n\nSource Name: Gizmodo.com\nPublished At: 2026-08-01T18:13:22Z\nArticle Title: On Tim Cook’s Final Earnings Call, He Said Apple May Charge for Siri\nArticle Description: A price may come into play \"when people use it a lot,\" he said.\n\n\nSource Name: Biztoc.com\nPublished At: 2026-08-01T17:45:49Z\nArticle Title: Apple Gets Kicked Out of the $5 Trillion Club After Reporting Earnings. Are Fears Over Surging Memory Costs Overblown?\nArticle Description: Apple Gets Kicked Out of the $5 Trillion Club After Reporting Earnings. Are Fears Over Surging Memory Costs Overblown?\nOn the surface, Apple (NASDAQ: AAPL) delivered a strong third-quarter earnings report with revenue jumping 16% to $109.4 billion, edging out…\n\n\nSource Name: Biztoc.com\nPublished At: 2026-08-01T17:45:24Z\nArticle Title: Apple stock sinks 7% after Tim Cook warns of ‘100-year flood’ in memory prices\nArticle Description: Apple shares plunged 7% on Friday in the tech giant’s worst one-day selloff since March 2020 after it warned that supply constraints and slowing growth would weigh on results in the current quarter — overshadowing an otherwise solid earnings report.\nThe stock…\n\n\nSource Name: The Times of India\nPublished At: 2026-08-01T17:22:56Z\nArticle Title: Bengaluru-based dietician shares a desi diet that helps you lose weight and improve mental health: 'When you cut out....'\nArticle Description: Anupama Menon, a well-known dietician from Bengaluru, recently took to her blog to share how you can lose weight the desi way, eating sattvic foods which will not just help you lose weight but also help you gain mental clarity.\n\n\nSource Name: Biztoc.com\nPublished At: 2026-08-01T17:14:37Z\nArticle Title: Apple CEO admits AI causes price troubles for Apple products\nArticle Description: Tim Cook spent part of July 30 thanking Apple shareholders at the end of what he confirmed would be his last earnings call as CEO. John Ternus takes over Sept. 1, and Cook moves to executive chairman. \nThe farewell was warm. The statement that followed was no…\n\n\nSource Name: 24/7 Wall St.\nPublished At: 2026-08-01T16:29:57Z\nArticle Title: These 3 ETFs Can Turn $500,000 Into $40,000 a Year Without Touching Principal\nArticle Description: Most income strategies force a painful choice between yield and principal, but three overlooked ETFs attack that tradeoff from completely different angles, a...\n\n\nBACKGROUND BRIEFING (compiled from web sources)\nBACKGROUND INFORMATION COMPILED FROM THE WEB:  The headline you provided is **not about Apple’s business**; it is a market commentary piece about **three ETFs** that allegedly could generate $40,000 a year from $500,000 without spending principal. I could not verify the underlying 24/7 Wall St. article itself from the results you provided, so I can only brief the Apple-related coverage that appears in the search results and note where the ETF claim is unverified.\n\n- **Apple’s latest reported quarter beat revenue expectations and set records in several lines of business.** Reuters reported fiscal third-quarter revenue of **$109.42 billion**, up **16.4%**, versus analyst estimates of **$108.65 billion** and Apple’s own guidance of **14% to 17%** growth.[5] CNBC reported a slightly different figure for Apple’s earlier quarter, with revenue of **$111.18 billion** versus **$109.66 billion** expected, and said iPhone, Mac, iPad, wearables, and Services all beat or were near expectations.[2]\n\n- **Margins were strong, but tariff refunds and memory costs complicate the comparison.** Reuters said gross margin was **50.1%**, including about **2 percentage points** from tariff refunds; excluding those refunds, gross margin was **48.1%**, above the midpoint of guidance and above the **47.92%** consensus estimate.[5] Apple management also said memory-cost pressure would weigh on future margins, with gross margin guidance for the next quarter at **47.5% to 48.5%**.[4][7]\n\n- **Guidance pointed to slower growth ahead because of supply constraints.** Apple said it expected the next quarter’s revenue growth to slow to **9% to 11%** year over year because of supply constraints in iPhone, Mac, and iPad and a **2.5 percentage point** foreign-exchange headwind.[3] Another source summarized management’s guidance as **14% to 17%** revenue growth for the June quarter and gross margin of **47.5% to 48.5%**.[4][9]\n\n- **Reported segment figures were broadly consistent across sources, though some numbers differ slightly by quarter framing and outlet.** CNBC reported **iPhone revenue of $56.99 billion**, **Mac $8.4 billion**, **iPad $6.91 billion**, **wearables/home/accessories $7.9 billion**, and **Services $30.98 billion**.[2] Another earnings summary said revenue was **$109.4 billion**, iPhone revenue **$54.3 billion**, products revenue **$78.7 billion**, company gross margin **50.1%**, products gross margin **40.1%**, and services gross margin **75.6%**.[3]\n\n- **Analyst estimates and reported figures are not fully aligned across the sources.** Reuters cited LSEG estimates of **$108.65 billion** revenue and **47.92%** gross margin.[5] CNBC cited **$109.66 billion** revenue expected and **48.4%** gross margin expected.[2] Those differences likely reflect different reporting periods or vendor datasets, but the sources do not explain the discrepancy.\n\n- **What is disputed or uncertain:** the underlying 24/7 Wall St. ETF story itself is **unverified** from the results provided, and none of the results show which ETFs were meant.[1] The Apple earnings coverage also contains **small cross-source inconsistencies** in revenue, EPS, and margin figures, but the broad picture is consistent: record or near-record revenue, strong gross margin, and cautious forward guidance.[2][3][5][7]\n\nIf you want, I can next turn this into a tighter **Apple-only investment briefing** with just the latest quarter, guidance, and the main disputed points. \n\n SOURCES: \n\n https://www.wsj.com/market-data/quotes/AAPL/financials \nSOURCES: \n\n https://www.cnbc.com/amp/2026/04/30/apple-aapl-q2-2026-earnings-report.html \nSOURCES: \n\n https://finance.yahoo.com/markets/stocks/articles/apple-inc-aapl-q3-2026-050211254.html \nSOURCES: \n\n https://www.alphaspread.com/security/nasdaq/aapl/investor-relations/earnings-call/q2-2026 \nSOURCES: \n\n https://www.reuters.com/business/retail-consumer/apple-revenue-profits-beat-expectations-iphone-mac-sales-2026-07-30/ \nSOURCES: \n\n https://finance.yahoo.com/markets/stocks/articles/apple-inc-aapl-q2-2026-072041316.html \nSOURCES: \n\n https://quartr.com/companies/apple-inc_4742 \nSOURCES: \n\n https://www.marketbeat.com/stocks/NASDAQ/AAPL/financials/ \nSOURCES: \n\n https://www.bitget.com/news/detail/12560605393272 \nSOURCES: \n\n https://www.marketwatch.com/investing/stock/aapl/financials\n\n=== ENVIRONMENT: MACRO RISK ===\nCURRENT MACRO RISK ALERTS\n Thunderstorms trigger ground stop at Philadelphia International Airport, Pennsylvania\n2026-08-02 20:32:20\nThunderstorms trigger ground stops at Washington D.C. area airports - Closed\n2026-08-02 20:21:53\nThunderstorms trigger ground stop at Newark Liberty International Airport, New Jersey - Update\n2026-08-02 20:09:10\nThunderstorms trigger ground stop at New York-LaGuardia Airport\n2026-08-02 19:49:57\nThunderstorms trigger ground stop at Boston Logan International Airport in Massachusetts - Update\n2026-08-02 19:46:30\nThunderstorms trigger ground stop at Charlotte Douglas International Airport, North Carolina\n2026-08-02 19:36:41\nStaffing issues trigger delays at Westchester County Airport in White Plains, New York\n2026-08-02 19:24:10\nThunderstorms trigger ground stops at Washington D.C. area airports - Update\n2026-08-02 19:21:56\nDerailment disrupts light rail service in Seattle, Washington\n2026-08-02 19:14:35\nPolice investigation triggers road closure in San Diego, California - Closed\n2026-08-02 18:19:30\nThunderstorms trigger ground stop at Baltimore/Washington International Airport, Maryland\n2026-08-02 17:38:05\nHundreds of homes destroyed by wildfires in Spokane, Washington - Update\n2026-08-02 16:16:45\nThunderstorms cause delays at Boston Logan International Airport in Massachusetts\n2026-08-02 15:37:33",
+    "length_chars": 55817
+  },
+  "sentiment": {
+    "overall": {
+      "positive_count": 56,
+      "negative_count": 14,
+      "total_words": 8748,
+      "density": 2.86,
+      "label": "positive"
+    },
+    "by_role": [
+      {
+        "role_group": "Analyst",
+        "sentiment_density": 0.0024
+      },
+      {
+        "role_group": "Company",
+        "sentiment_density": 0.0339
+      }
+    ],
+    "most_positive_speakers": [
+      {
+        "speaker": "John Ternus",
+        "sentiment_density": 0.0574
+      },
+      {
+        "speaker": "Tim Cook",
+        "sentiment_density": 0.0492
+      },
+      {
+        "speaker": "Kevan Parekh",
+        "sentiment_density": 0.0374
+      }
+    ],
+    "most_negative_speakers": [
+      {
+        "speaker": "Ben Reitzes",
+        "sentiment_density": -0.0089
+      },
+      {
+        "speaker": "Wamsi Mohan",
+        "sentiment_density": -0.0084
+      },
+      {
+        "speaker": "Samik Chatterjee",
+        "sentiment_density": -0.0056
+      }
+    ]
+  },
+  "extraction": {
+    "companies_mentioned": ["451 Research", "Google", "IDC", "JP Morgan", "Marsh", "Microsoft", "Morgan Stanley", "Perplexity", "TSMC", "Wells Fargo", "Worldpanel"],
+    "executives": [
+      {
+        "name": "Suhasini Chandramouli",
+        "role": "Director of Investor Relations"
+      },
+      {
+        "name": "Tim Cook",
+        "role": "CEO"
+      },
+      {
+        "name": "John Ternus",
+        "role": "Unspecified"
+      },
+      {
+        "name": "Kevan Parekh",
+        "role": "CFO"
+      },
+      {
+        "name": "John",
+        "role": "Unspecified"
+      },
+      {
+        "name": "Tim",
+        "role": "CEO"
+      },
+      {
+        "name": "Kevan",
+        "role": "Unspecified"
+      },
+      {
+        "name": "Erik",
+        "role": "Unspecified"
+      },
+      {
+        "name": "Ben",
+        "role": ""
+      },
+      {
+        "name": "Michael Ng",
+        "role": "Unspecified"
+      },
+      {
+        "name": "Mike",
+        "role": "unknown"
+      },
+      {
+        "name": "Wamsi",
+        "role": ""
+      },
+      {
+        "name": "Wamsi Mohan",
+        "role": "CFO"
+      },
+      {
+        "name": "Steve Jobs",
+        "role": "Former CEO"
+      },
+      {
+        "name": "Steve",
+        "role": "Unspecified"
+      },
+      {
+        "name": "Amit",
+        "role": ""
+      },
+      {
+        "name": "David",
+        "role": "unspecified"
+      },
+      {
+        "name": "Aaron Rakers",
+        "role": ""
+      },
+      {
+        "name": "Josh Rosenstock",
+        "role": ""
+      }
+    ],
+    "products_and_segments": ["A19", "A19 Pro", "AirPods", "AirPods Max 2", "AirPods Pro 3", "App Store", "Apple Business", "Apple Intelligence", "Apple Maps", "Apple silicon", "Apple TV", "Apple Watch", "Apple Watch SE", "Apple Watch Series 11", "Apple Watch Ultra 3", "C1X modem", "Center Stage", "Chromebooks", "iPad", "iPad Air", "iPad Pro", "iPhone", "iPhone 17", "iPhone 17 family", "iPhone 17 Pro", "iPhone 17 Pro Max", "iPhone 17e", "iPhone Air", "M5", "M5 Max", "M5 Pro", "Mac", "Mac mini", "Mac Studio", "MacBook Air", "MacBook Neo", "MacBook Pro", "Maps", "memory", "N1 wireless networking chip", "neural engine", "services", "Services", "Siri", "SOC", "Studio Display", "Studio Display XDR", "Watch", "Windows PCs"],
+    "financial_figures": [
+      {
+        "turn_index": 3,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "double digits",
+        "metric": "year-over-year growth"
+      },
+      {
+        "turn_index": 8,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "$111.2 billion",
+        "metric": "revenue"
+      },
+      {
+        "turn_index": 8,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "17%",
+        "metric": "revenue growth year-over-year"
+      },
+      {
+        "turn_index": 8,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "22%",
+        "metric": "iPhone revenue growth year-over-year"
+      },
+      {
+        "turn_index": 8,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "16%",
+        "metric": "Services revenue growth year-over-year"
+      },
+      {
+        "turn_index": 8,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "$2.01",
+        "metric": "EPS"
+      },
+      {
+        "turn_index": 10,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "$57 billion",
+        "metric": "iPhone revenue"
+      },
+      {
+        "turn_index": 12,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "$8.4 billion",
+        "metric": "Mac revenue"
+      },
+      {
+        "turn_index": 12,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "6%",
+        "metric": "Mac revenue growth"
+      },
+      {
+        "turn_index": 14,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "$6.9 billion",
+        "metric": "iPad revenue"
+      },
+      {
+        "turn_index": 14,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "8%",
+        "metric": "iPad year over year growth"
+      },
+      {
+        "turn_index": 15,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "$7.9 billion",
+        "metric": "revenue for the March quarter"
+      },
+      {
+        "turn_index": 15,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "5%",
+        "metric": "year over year growth"
+      },
+      {
+        "turn_index": 18,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "$31 billion",
+        "metric": "services revenue"
+      },
+      {
+        "turn_index": 19,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "100 countries and regions",
+        "metric": "subscribers watching MLS matches"
+      },
+      {
+        "turn_index": 19,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "March quarter revenue record",
+        "metric": "retail revenue"
+      },
+      {
+        "turn_index": 20,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "30%",
+        "metric": "recycled content in all of our products shipped in 2025"
+      },
+      {
+        "turn_index": 21,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "$600 billion",
+        "metric": "commitment to the U.S."
+      },
+      {
+        "turn_index": 24,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$111.2 billion",
+        "metric": "revenue"
+      },
+      {
+        "turn_index": 24,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "17%",
+        "metric": "year-over-year revenue growth"
+      },
+      {
+        "turn_index": 24,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "2.5 percentage points",
+        "metric": "foreign exchange tailwind to growth rate"
+      },
+      {
+        "turn_index": 24,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$80.2 billion",
+        "metric": "Products revenue"
+      },
+      {
+        "turn_index": 24,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "17%",
+        "metric": "year-over-year Products revenue growth"
+      },
+      {
+        "turn_index": 25,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "2.5 billion",
+        "metric": "active devices"
+      },
+      {
+        "turn_index": 25,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$31 billion",
+        "metric": "Services revenue"
+      },
+      {
+        "turn_index": 25,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "16%",
+        "metric": "Services year-over-year growth"
+      },
+      {
+        "turn_index": 25,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "49.3%",
+        "metric": "Company gross margin"
+      },
+      {
+        "turn_index": 25,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "110 basis points",
+        "metric": "Company gross margin sequential increase"
+      },
+      {
+        "turn_index": 25,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "38.7%",
+        "metric": "Products gross margin"
+      },
+      {
+        "turn_index": 25,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "200 basis points",
+        "metric": "Products gross margin sequential decrease"
+      },
+      {
+        "turn_index": 25,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "76.7%",
+        "metric": "Services gross margin"
+      },
+      {
+        "turn_index": 25,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "20 basis points",
+        "metric": "Services gross margin sequential increase"
+      },
+      {
+        "turn_index": 25,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$18.9 billion",
+        "metric": "Operating expenses"
+      },
+      {
+        "turn_index": 25,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "24%",
+        "metric": "Operating expenses year-over-year growth"
+      },
+      {
+        "turn_index": 26,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$29.6 billion",
+        "metric": "net income"
+      },
+      {
+        "turn_index": 26,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$2.01",
+        "metric": "diluted earnings per share"
+      },
+      {
+        "turn_index": 26,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "22%",
+        "metric": "year-over-year growth in diluted EPS"
+      },
+      {
+        "turn_index": 26,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$28.7 billion",
+        "metric": "operating cash flow"
+      },
+      {
+        "turn_index": 26,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$57 billion",
+        "metric": "iPhone revenue"
+      },
+      {
+        "turn_index": 26,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "22%",
+        "metric": "year-over-year growth in iPhone revenue"
+      },
+      {
+        "turn_index": 27,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$8.4 billion",
+        "metric": "Mac revenue"
+      },
+      {
+        "turn_index": 27,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "6%",
+        "metric": "Mac year-over-year growth"
+      },
+      {
+        "turn_index": 27,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$6.9 billion",
+        "metric": "iPad revenue"
+      },
+      {
+        "turn_index": 27,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "8%",
+        "metric": "iPad year-over-year growth"
+      },
+      {
+        "turn_index": 28,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$7.9 billion",
+        "metric": "Wearables, home, and accessories revenue"
+      },
+      {
+        "turn_index": 28,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "5%",
+        "metric": "Wearables, home, and accessories year-over-year growth"
+      },
+      {
+        "turn_index": 29,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "96%",
+        "metric": "customer satisfaction on Apple Watch"
+      },
+      {
+        "turn_index": 29,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$31 billion",
+        "metric": "services revenue"
+      },
+      {
+        "turn_index": 29,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "16%",
+        "metric": "services year-over-year growth"
+      },
+      {
+        "turn_index": 29,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "2.5 billion",
+        "metric": "active devices"
+      },
+      {
+        "turn_index": 32,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$15 billion",
+        "metric": "cash returned to shareholders"
+      },
+      {
+        "turn_index": 32,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$3.8 billion",
+        "metric": "dividends and equivalents"
+      },
+      {
+        "turn_index": 32,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$11 billion",
+        "metric": "open market repurchases"
+      },
+      {
+        "turn_index": 32,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "42 million",
+        "metric": "Apple shares repurchased"
+      },
+      {
+        "turn_index": 32,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$100 billion",
+        "metric": "net cash reduced since 2018"
+      },
+      {
+        "turn_index": 33,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$100 billion",
+        "metric": "share repurchases"
+      },
+      {
+        "turn_index": 33,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$0.27 per share",
+        "metric": "dividend"
+      },
+      {
+        "turn_index": 34,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "14%-17%",
+        "metric": "June quarter total company revenue growth year-over-year"
+      },
+      {
+        "turn_index": 34,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "2.5 percentage points",
+        "metric": "FX tailwind to the total company growth rate"
+      },
+      {
+        "turn_index": 35,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "47.5% to 48.5%",
+        "metric": "gross margin"
+      },
+      {
+        "turn_index": 35,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$18.8 billion to $19.1 billion",
+        "metric": "operating expenses"
+      },
+      {
+        "turn_index": 35,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$250 million",
+        "metric": "OINE"
+      },
+      {
+        "turn_index": 35,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "17%",
+        "metric": "tax rate"
+      },
+      {
+        "turn_index": 43,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$1 trillion",
+        "metric": "total returned to shareholders"
+      },
+      {
+        "turn_index": 43,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$850 billion",
+        "metric": "returned to shareholders through share repurchases"
+      },
+      {
+        "turn_index": 43,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "$100 billion",
+        "metric": "increased buyback authorization"
+      },
+      {
+        "turn_index": 52,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "22%",
+        "metric": "iPhone growth"
+      },
+      {
+        "turn_index": 54,
+        "speaker": "Ben Reitzes",
+        "role_group": "Analyst",
+        "figure": "47",
+        "metric": "Unspecified metric"
+      },
+      {
+        "turn_index": 54,
+        "speaker": "Ben Reitzes",
+        "role_group": "Analyst",
+        "figure": "48",
+        "metric": "Unspecified metric"
+      },
+      {
+        "turn_index": 65,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "year-over-year growth",
+        "metric": "advertising business"
+      },
+      {
+        "turn_index": 81,
+        "speaker": "Amit Daryanani",
+        "role_group": "Analyst",
+        "figure": "20% plus",
+        "metric": "iPhone growth"
+      },
+      {
+        "turn_index": 94,
+        "speaker": "David Vogt",
+        "role_group": "Analyst",
+        "figure": "double digits",
+        "metric": "growth of a lot of different offerings"
+      },
+      {
+        "turn_index": 95,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "20 basis points",
+        "metric": "Q2 services margin increase sequentially"
+      },
+      {
+        "turn_index": 103,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "200 basis points",
+        "metric": "products gross margin decrease sequentially"
+      },
+      {
+        "turn_index": 103,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "figure": "110 basis points",
+        "metric": "overall company gross margin impact sequentially"
+      },
+      {
+        "turn_index": 105,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "49.3%",
+        "metric": "gross margin"
+      },
+      {
+        "turn_index": 112,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "33%",
+        "metric": "first half of the year growth in Greater China"
+      },
+      {
+        "turn_index": 112,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "figure": "28%",
+        "metric": "March quarter revenue growth in Greater China"
+      }
+    ],
+    "forward_looking_statements": [
+      {
+        "turn_index": 1,
+        "speaker": "Suhasini Chandramouli",
+        "role_group": "Company",
+        "statement": "including, without limitation, those regarding revenue, gross margin, operating expenses, other income and expense, taxes, capital allocation, and future business outlook"
+      },
+      {
+        "turn_index": 2,
+        "speaker": "Suhasini Chandramouli",
+        "role_group": "Company",
+        "statement": "For more information, please refer to the risk factors discussed in Apple's most recently filed reports on Form 10-Q and Form 10-K and the Form 8-K filed with the SEC today, along with the associated press release. Additional information will also be in our report on Form 10-Q for the quarter ended March 28th, 2026 to be filed tomorrow and in other reports and filings we make with the SEC. Apple assumes no obligation to update any forward-looking statements which speak only as of the date they are made."
+      },
+      {
+        "turn_index": 3,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "our roadmap is incredible"
+      },
+      {
+        "turn_index": 4,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "John and I will be working closely together to make sure this transition is perfectly smooth"
+      },
+      {
+        "turn_index": 5,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "I am incredibly optimistic about Apple's future, and I know we have the right team in place to deliver on the promise of this company."
+      },
+      {
+        "turn_index": 6,
+        "speaker": "John Ternus",
+        "role_group": "Company",
+        "statement": "we have an incredible roadmap ahead"
+      },
+      {
+        "turn_index": 7,
+        "speaker": "John Ternus",
+        "role_group": "Company",
+        "statement": "I couldn't be more optimistic about what's to come"
+      },
+      {
+        "turn_index": 9,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "to look forward to writing the next chapter in our story of innovation"
+      },
+      {
+        "turn_index": 16,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "We look forward to bringing a more personalized Siri to users coming this year."
+      },
+      {
+        "turn_index": 17,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "that same foundation is drawing developers and researchers to our products as powerful platforms for building and running agentic AI"
+      },
+      {
+        "turn_index": 19,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "we've continued to grow in India in recent years, part of our larger efforts to connect with even more customers in emerging markets all over the world"
+      },
+      {
+        "turn_index": 20,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "we've reached new milestones in the environment, including the use of recycled content in 30% of the materials in all of our products shipped in 2025, the most we've ever had. That includes the use of 100% recycled cobalt in all Apple-designed batteries and 100% recycled rare earth elements in all magnets. We've also achieved our goal of removing plastic from packaging with every Apple product now shipping in fiber-based packaging."
+      },
+      {
+        "turn_index": 21,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "Apple is on track to purchase well over 100 million advanced chips"
+      },
+      {
+        "turn_index": 22,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "we're looking forward to opening the doors to an all-new advanced manufacturing center in Houston later this year"
+      },
+      {
+        "turn_index": 22,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "we're delighted to welcome developers back to Apple Park for WWDC 2026"
+      },
+      {
+        "turn_index": 22,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "we can't wait to share what we've been working on, from AI advancements to exciting new software and developer tools"
+      },
+      {
+        "turn_index": 23,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "we are even more excited and more optimistic about the next 50 years and beyond"
+      },
+      {
+        "turn_index": 24,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "statement": "we would have had a higher growth rate for total company revenue for the quarter"
+      },
+      {
+        "turn_index": 29,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "statement": "We're optimistic about the future of our services business"
+      },
+      {
+        "turn_index": 32,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "statement": "we plan to continue our capital allocation philosophy of first making all the necessary investments needed to support the business and then returning excess cash to shareholders over time"
+      },
+      {
+        "turn_index": 33,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "statement": "As we move ahead into the June quarter, I'd like to review our outlook, which includes the types of forward-looking information that Suhasini referred to."
+      },
+      {
+        "turn_index": 34,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "statement": "we expect our June quarter total company revenue to grow by 14%-17% year-over-year, which comprehends our best view of constrained supply"
+      },
+      {
+        "turn_index": 34,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "statement": "we expect services revenue to grow at a year-over-year rate similar to what we reported in the March quarter after removing the favorable year-over-year impact from foreign exchange tailwinds"
+      },
+      {
+        "turn_index": 35,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "statement": "We expect gross margin to be between 47.5% and 48.5%."
+      },
+      {
+        "turn_index": 35,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "statement": "We expect operating expenses to be between $18.8 billion and $19.1 billion."
+      },
+      {
+        "turn_index": 35,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "statement": "We expect OINE to be around $250 million, excluding any potential impact from the mark-to-market of minority investments, and our tax rate to be around 17%."
+      },
+      {
+        "turn_index": 38,
+        "speaker": "Erik Woodring",
+        "role_group": "Analyst",
+        "statement": "Does your June quarter guidance also reflect supply constraints for those segments?"
+      },
+      {
+        "turn_index": 39,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "the majority of our supply constraints will be on several Mac models, given the continued high levels of demand that we're seeing"
+      },
+      {
+        "turn_index": 39,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "For Mac, in the June quarter, there's 2 factors that are driving the constraints"
+      },
+      {
+        "turn_index": 40,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "we think, looking forward, that the Mac mini and the Mac Studio may take several months to reach supply-demand balance"
+      },
+      {
+        "turn_index": 41,
+        "speaker": "Erik Woodring",
+        "role_group": "Analyst",
+        "statement": "we're no longer providing this as a formal target"
+      },
+      {
+        "turn_index": 41,
+        "speaker": "Erik Woodring",
+        "role_group": "Analyst",
+        "statement": "making investments"
+      },
+      {
+        "turn_index": 42,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "statement": "We believe we're at a stage where we're evaluating cash and debt independently is really the right approach for us and allows us to make more optimal economic decisions around how we best utilize our debt and cash portfolios to support the business, you know, based on business factors and market conditions."
+      },
+      {
+        "turn_index": 44,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "statement": "important to the overall approach, you know, to delivering long-term shareholder value"
+      },
+      {
+        "turn_index": 51,
+        "speaker": "Ben Reitzes",
+        "role_group": "Analyst",
+        "statement": "there's new products coming, of a totally new form factor, or does it change the game or anything high level you might wanna say about that and that trend or potential non-trend"
+      },
+      {
+        "turn_index": 55,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "we expect significantly higher memory costs. They are also partly offset by the benefit of carry-in inventory."
+      },
+      {
+        "turn_index": 56,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "we believe memory costs will drive an increasing impact on our business"
+      },
+      {
+        "turn_index": 56,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "we'll continue to evaluate this"
+      },
+      {
+        "turn_index": 56,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "we'll look at a range of options"
+      },
+      {
+        "turn_index": 61,
+        "speaker": "Michael Ng",
+        "role_group": "Analyst",
+        "statement": "how will your future product roadmap inform that strategy"
+      },
+      {
+        "turn_index": 65,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "statement": "we believe it's possible to help businesses of all sizes grow via advertising while still delivering a great customer experience, while also importantly respecting people's fundamental right to privacy"
+      },
+      {
+        "turn_index": 70,
+        "speaker": "Wamsi Mohan",
+        "role_group": "Analyst",
+        "statement": "As you think about product position relative to your competitors, so when you think about product position and pricing relative to competition, do you think in such times of dislocation that Apple would be strategically more focused on share gain or where potentially you don't raise pricing and perhaps lower ends of the portfolio where your competitors are struggling or more focused on profitability?"
+      },
+      {
+        "turn_index": 71,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "we will look at a range of options, with memory costs increasing"
+      },
+      {
+        "turn_index": 72,
+        "speaker": "Wamsi Mohan",
+        "role_group": "Analyst",
+        "statement": "where will Apple invest more heavily over the next several years"
+      },
+      {
+        "turn_index": 73,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "We're clearly investing. We're investing in products and services, and we see opportunities in both of those."
+      },
+      {
+        "turn_index": 73,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "We could not be more excited about how the future is playing out."
+      },
+      {
+        "turn_index": 74,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "statement": "we believe AI is a really important investment area for Apple, and we're gonna be doing that incrementally on top of what we normally invest in our product, you know, roadmap."
+      },
+      {
+        "turn_index": 81,
+        "speaker": "Amit Daryanani",
+        "role_group": "Analyst",
+        "statement": "the guide sort of implies the momentum will continue in June"
+      },
+      {
+        "turn_index": 85,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "we'll be able to build more products and do it all over again"
+      },
+      {
+        "turn_index": 90,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "I believe it will take several months to reach supply-demand balance"
+      },
+      {
+        "turn_index": 90,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "We're not at the point where we're saying this is going to end anytime soon"
+      },
+      {
+        "turn_index": 95,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "statement": "we're encouraged by what we're seeing. We do have some services that are improving in profitability as they gain scale."
+      },
+      {
+        "turn_index": 96,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "statement": "we have a wide portfolio that has different characteristics and can grow, you know, at different rates at different times"
+      },
+      {
+        "turn_index": 96,
+        "speaker": "Kevan Parekh",
+        "role_group": "Company",
+        "statement": "we're encouraged by the overall trajectory that we've seen"
+      },
+      {
+        "turn_index": 105,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "we plan to reinvest any amount we receive back into U.S. innovation and advanced manufacturing. These would be new investments and would be in addition to our prior commitments in the U.S."
+      },
+      {
+        "turn_index": 115,
+        "speaker": "Tim Cook",
+        "role_group": "Company",
+        "statement": "we've got some great products for them, both currently and coming"
+      }
+    ]
+  }
+}
+

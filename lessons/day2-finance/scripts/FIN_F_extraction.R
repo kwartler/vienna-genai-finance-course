@@ -1,7 +1,6 @@
 # ============================================================
 # FIN_F_extraction.R
 # NER and extraction lesson, Day 2, Finance Masters track
-# (9:00 to 10:00)
 #
 # Purpose: pull structured facts out of an earnings call. From
 # each speaker turn we extract five categories: companies,
@@ -69,9 +68,8 @@ savePth <- "~/Desktop/vienna-genai-finance-course/context_files"
 SYMBOL <- "AAPL"
 
 # The reporting company. Passed to the model so it knows NOT
-# to list itself in the companies field. This matters more
-# than it looks. Without it the model dutifully returns
-# "Apple" for every turn of an Apple call.
+# to list itself in the companies field. Without it the model dutifully returns
+# "Apple" for every turn of an Apple call...which is not helpful!  
 REPORTING_COMPANY <- "Apple"
 
 OPENROUTER_URL <- "https://openrouter.ai/api/v1/chat/completions"
@@ -92,32 +90,15 @@ RETRY_MAX <- 3
 
 openrouter_key <- Sys.getenv("OPENROUTER_API_KEY")
 
-if (nchar(openrouter_key) == 0) {
-  stop("No OpenRouter key. Run Sys.setenv(OPENROUTER_API_KEY = \"your_key\") in the console.")
-} else {
-  cat("OpenRouter key found.\n")
-}
-
 # ============================================================
 # LOAD ONE CALL (same pattern as FIN_D and FIN_E)
 # ============================================================
 
-archive_path <- path.expand(ARCHIVE_DIR)
-all_csv <- list.files(archive_path, pattern = "\\.csv$", full.names = TRUE)
+symbol_files <- list.files(ARCHIVE_DIR,
+                           pattern = paste0("^", SYMBOL, "_.*\\.csv$"),
+                           full.names = TRUE)
 
-if (length(all_csv) == 0) {
-  stop("No CSV files found in the archive folder.")
-}
-
-symbol_prefix <- paste0(SYMBOL, "_")
-name_starts <- substr(basename(all_csv), 1, nchar(symbol_prefix))
-symbol_files <- all_csv[name_starts == symbol_prefix]
-
-if (length(symbol_files) == 0) {
-  stop(paste("No transcript files found for", SYMBOL, "in", archive_path))
-}
-
-file_dates <- substring(basename(symbol_files), nchar(symbol_prefix) + 1)
+file_dates <- substring(basename(symbol_files), nchar(SYMBOL) + 2)
 file_dates <- sub("\\.csv$", "", file_dates)
 
 newest_idx <- order(file_dates, decreasing = TRUE)[1]
@@ -129,12 +110,10 @@ this_call <- read.csv(chosen_file, stringsAsFactors = FALSE)
 cat("Loaded", nrow(this_call), "speaker turns from", SYMBOL, "on", chosen_date, "\n\n")
 
 # Same role rule.
-isAnalyst <- function(title_text) {
-  return(grepl("analyst|research", tolower(title_text)) == TRUE)
-}
-
-this_call$role_group <- ifelse(isAnalyst(this_call$title) == TRUE, "Analyst", "Company")
-
+isAnalyst <- grepl("analyst|research|managing director", 
+                   this_call$title, 
+                   ignore.case = T)
+this_call$role_group <- ifelse(isAnalyst==T, "Analyst","Company")
 this_call$msg_chars <- nchar(this_call$msg)
 
 kept <- this_call[this_call$msg_chars >= MIN_ROW_CHARS, ]
@@ -343,41 +322,12 @@ cat("Preview:", substr(demo_row$msg, 1, 200), "...\n\n")
 demo_result <- extractOneTurn(demo_row$msg)
 
 # Print each category cleanly so students can read the shape.
-cat("Companies (", length(demo_result$companies), "):\n", sep = "")
-if (length(demo_result$companies) > 0) {
-  for (nm in demo_result$companies) {
-    cat("  -", nm, "\n")
-  }
-}
+cat('Executives:\n', paste0(demo_result$executives, collapse = '\n'))
+cat('Products:\n', paste0(demo_result$products, collapse = '\n'))
+cat('Companies:\n', paste0(demo_result$companies, collapse = '\n'))
+cat('Financial figures:\n', paste0(demo_result$financial_figures, collapse = '\n'))
+cat('Forward looking:\n', paste0(demo_result$forward_looking_statements, collapse = '\n'))
 
-cat("Executives (", length(demo_result$executives), "):\n", sep = "")
-if (length(demo_result$executives) > 0) {
-  for (ex in demo_result$executives) {
-    cat("  -", ex$name, "(", ex$role, ")\n")
-  }
-}
-
-cat("Products (", length(demo_result$products), "):\n", sep = "")
-if (length(demo_result$products) > 0) {
-  for (pr in demo_result$products) {
-    cat("  -", pr, "\n")
-  }
-}
-
-cat("Financial figures (", length(demo_result$financial_figures), "):\n", sep = "")
-if (length(demo_result$financial_figures) > 0) {
-  for (fg in demo_result$financial_figures) {
-    cat("  -", fg$figure, "for", fg$metric, "\n")
-  }
-}
-
-cat("Forward looking (", length(demo_result$forward_looking_statements), "):\n", sep = "")
-if (length(demo_result$forward_looking_statements) > 0) {
-  for (fls in demo_result$forward_looking_statements) {
-    cat("  -", fls, "\n")
-  }
-}
-cat("\n")
 
 # STOP AND LOOK.
 # Compare the passage against what came back. Two questions:
@@ -389,7 +339,7 @@ cat("\n")
 # too loose. You adjust the system prompt, not the model.
 
 # ============================================================
-# LOOP OVER EVERY KEPT TURN
+# LOOP OVER EVERY KEPT TURN - run these code blocks 
 # ============================================================
 
 n_kept <- nrow(kept)
@@ -509,8 +459,8 @@ extraction_df <- data.frame(
 )
 
 cat("---- Per turn data frame ----\n")
-cat("Rows:", nrow(extraction_df), "\n")
-cat("Columns:", paste(names(extraction_df), collapse = ", "), "\n\n")
+nrow(extraction_df)
+names(extraction_df)
 
 # Show the counts across the first several rows.
 preview_cols <- c("speaker", "role_group",
@@ -526,7 +476,7 @@ cat("\n")
 
 # For companies, executives, and products: dedupe. These are
 # entities that get named many times. One list per category
-# is what a downstream reader (or FIN_G) wants.
+# is what a downstream reader is usually expecting.
 #
 # For financial figures and forward looking statements: do
 # NOT dedupe. Every figure and every statement is a separate
@@ -627,7 +577,6 @@ if (length(unique_companies) > 0) {
 } else {
   cat("(none)\n")
 }
-cat("\n")
 
 cat("---- Unique executives (", nrow(exec_df), ") ----\n", sep = "")
 if (nrow(exec_df) > 0) {
@@ -635,7 +584,6 @@ if (nrow(exec_df) > 0) {
 } else {
   cat("(none)\n")
 }
-cat("\n")
 
 cat("---- Unique products and segments (", length(unique_products), ") ----\n", sep = "")
 if (length(unique_products) > 0) {
@@ -643,7 +591,6 @@ if (length(unique_products) > 0) {
 } else {
   cat("(none)\n")
 }
-cat("\n")
 
 cat("---- Financial figures (", nrow(all_figures), ", not deduped) ----\n", sep = "")
 if (nrow(all_figures) > 0) {
@@ -655,7 +602,6 @@ if (nrow(all_figures) > 0) {
 } else {
   cat("(none)\n")
 }
-cat("\n")
 
 cat("---- Forward looking statements (", nrow(all_fls), ") ----\n", sep = "")
 if (nrow(all_fls) > 0) {
@@ -666,22 +612,16 @@ if (nrow(all_fls) > 0) {
 } else {
   cat("(none)\n")
 }
-cat("\n")
 
 # TIP: the forward looking list is the single most useful
 # output of this script for someone building an investment
 # thesis. Everything else is what happened. This is what
 # management is telling you is about to happen, in their
-# words. Read them like guidance, because that is what they
-# are.
+# words. 
 
 # ============================================================
 # SAVE
 # ============================================================
-
-if (dir.exists(path.expand(savePth)) == FALSE) {
-  dir.create(path.expand(savePth), recursive = TRUE)
-}
 
 extraction_summary <- list(
   symbol = SYMBOL,
@@ -722,7 +662,7 @@ cat("   and see how many bare numbers get returned.\n\n")
 # WHAT YOU SHOULD TAKE AWAY
 # ============================================================
 
-cat("---- Summary ----\n")
+cat("---- Learning Review ----\n")
 cat("1. A JSON schema can nest. Arrays of objects are how you carry\n")
 cat("   related fields together (name plus role, figure plus metric).\n")
 cat("2. A worked example in the system prompt outperforms a paragraph\n")

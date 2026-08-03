@@ -1,7 +1,6 @@
 # ============================================================
 # FIN_E_sentiment.R
 # Sentiment lesson, Day 2, Finance Masters track
-# (9:00 to 10:00)
 #
 # Purpose: score sentiment across an entire earnings call by
 # asking a language model to identify positive and negative
@@ -80,7 +79,7 @@ OPENROUTER_URL <- "https://openrouter.ai/api/v1/chat/completions"
 
 # Open weight, cheap, reliable at JSON schema. Kept as a top
 # level constant so switching to a closed model (for example
-# google/gemini-2.0-flash-001) is a one line change.
+# google/gemini-3.5-flash-lite) is a one line change.
 MODEL <- "mistralai/mistral-small-3.2-24b-instruct"
 
 # Rows shorter than this are dropped before scoring. A twenty
@@ -98,7 +97,7 @@ RETRY_MAX <- 3
 # plain terms: (positive_phrases minus negative_phrases)
 # divided by total words. A value of 0.005 means the passage
 # needs at least half a percentage point more of one than the
-# other before we call it. Adjust and see how the labels
+# other before we call it pos or neg. Adjust and see how the labels
 # shift.
 NEUTRAL_BAND <- 0.005
 
@@ -108,53 +107,33 @@ NEUTRAL_BAND <- 0.005
 
 openrouter_key <- Sys.getenv("OPENROUTER_API_KEY")
 
-if (nchar(openrouter_key) == 0) {
-  stop("No OpenRouter key. Run Sys.setenv(OPENROUTER_API_KEY = \"your_key\") in the console.")
-} else {
-  cat("OpenRouter key found.\n")
-}
-
 # ============================================================
 # LOAD ONE CALL (same pattern as FIN_D)
 # ============================================================
 
-archive_path <- path.expand(ARCHIVE_DIR)
-all_csv <- list.files(archive_path, pattern = "\\.csv$", full.names = TRUE)
+symbol_files <- list.files(ARCHIVE_DIR,
+                           pattern = paste0("^", SYMBOL, "_.*\\.csv$"),
+                           full.names = TRUE)
 
-if (length(all_csv) == 0) {
-  stop("No CSV files found in the archive folder.")
-}
-
-symbol_prefix <- paste0(SYMBOL, "_")
-name_starts <- substr(basename(all_csv), 1, nchar(symbol_prefix))
-symbol_files <- all_csv[name_starts == symbol_prefix]
-
-if (length(symbol_files) == 0) {
-  stop(paste("No transcript files found for", SYMBOL, "in", archive_path))
-}
-
-file_dates <- substring(basename(symbol_files), nchar(symbol_prefix) + 1)
+# Find the latest
+file_dates <- substring(basename(symbol_files), nchar(SYMBOL) + 2)
 file_dates <- sub("\\.csv$", "", file_dates)
 
-newest_idx <- order(file_dates, decreasing = TRUE)[1]
+# Load the latest and quick check
+newest_idx  <- order(file_dates, decreasing = TRUE)[1]
 chosen_file <- symbol_files[newest_idx]
-chosen_date <- file_dates[newest_idx]
-
+latest_date <- file_dates[newest_idx]
 this_call <- read.csv(chosen_file, stringsAsFactors = FALSE)
-
-cat("Loaded", nrow(this_call), "speaker turns from", SYMBOL, "on", chosen_date, "\n\n")
 
 # ============================================================
 # TAG ROLES, DROP SHORT TURNS
 # ============================================================
 
-# Same role rule as FIN_A, so the split matches upstream.
-isAnalyst <- function(title_text) {
-  return(grepl("analyst|research", tolower(title_text)) == TRUE)
-}
-
-this_call$role_group <- ifelse(isAnalyst(this_call$title) == TRUE, "Analyst", "Company")
-
+# Assign a speaking group
+isAnalyst <- grepl("analyst|research|managing director", 
+                   this_call$title, 
+                   ignore.case = T)
+this_call$role_group <- ifelse(isAnalyst==T, "Analyst","Company")
 this_call$msg_chars <- nchar(this_call$msg)
 
 kept <- this_call[this_call$msg_chars >= MIN_ROW_CHARS, ]
@@ -162,13 +141,6 @@ kept <- this_call[this_call$msg_chars >= MIN_ROW_CHARS, ]
 cat("---- Filtering short turns ----\n")
 cat("Turns loaded:      ", nrow(this_call), "\n")
 cat("Turns kept (>= ", MIN_ROW_CHARS, " chars): ", nrow(kept), "\n", sep = "")
-cat("Turns dropped:     ", nrow(this_call) - nrow(kept), "\n\n")
-
-# TIP: read the dropped turns before continuing. In one call
-# they are almost all "Good morning" and "Thanks, next
-# question." That is the right thing to drop. Occasionally
-# something substantive is under the threshold and you should
-# raise MIN_ROW_CHARS or lower it accordingly.
 
 # Preserve the original turn index so it lines up with FIN_A.
 kept$turn_index <- as.integer(rownames(kept))
@@ -179,9 +151,7 @@ rownames(kept) <- NULL
 # ============================================================
 
 # This is what OpenRouter passes to the provider. `strict`
-# tells the provider to enforce the shape (a compatible
-# provider will refuse to emit anything else). `additional
-# Properties: false` blocks the model from inventing fields.
+# tells the provider to enforce the shape.
 
 sentiment_schema <- list(
   name = "sentiment_result",
@@ -314,7 +284,7 @@ if (length(demo_result$negative_phrases) > 0) {
 }
 cat("\n")
 
-# STOP AND LOOK AT THIS.
+# STOP AND LOOK AT THIS WHEN MAKING A PRODUCTIPN SYSTEM.
 # Read the phrases against the passage. Are they actually
 # there? Are they actually positive or negative? This is the
 # only step where a human is looking at every phrase, and it
@@ -395,9 +365,7 @@ kept$label <- sapply(kept$sentiment_density, labelFromDensity)
 
 # TIP: the label is derived, not asked for. That is the
 # point. The model does the language part (finding phrases),
-# and R does the arithmetic. If a student later asks "why did
-# this get called positive?", the answer is on this line, not
-# hidden in a model.
+# and R does the arithmetic. Remember LLMs do not calculate in reality!
 
 # ============================================================
 # BUILD THE FINAL DATA FRAME
@@ -406,7 +374,7 @@ kept$label <- sapply(kept$sentiment_density, labelFromDensity)
 sentiment_df <- data.frame(
   turn_index = kept$turn_index,
   symbol = SYMBOL,
-  report_date = chosen_date,
+  report_date = latest_date,
   speaker = kept$speaker,
   title = kept$title,
   role_group = kept$role_group,
@@ -421,127 +389,18 @@ sentiment_df <- data.frame(
   stringsAsFactors = FALSE
 )
 
-cat("---- Data frame built ----\n")
-cat("Rows:", nrow(sentiment_df), "\n")
-cat("Columns:", paste(names(sentiment_df), collapse = ", "), "\n\n")
+nrow(sentiment_df)
+names(sentiment_df)
+head(sentiment_df)
 
-cat("---- First 5 rows (label and counts) ----\n")
-preview_cols <- c("speaker", "role_group", "msg_words", "positive_count", "negative_count", "label")
-print(head(sentiment_df[, preview_cols], 5), row.names = FALSE)
-cat("\n")
+# Explore by speaker; mgt is usually more positive
+table(sentiment_df$speaker, sentiment_df$label)
+aggregate(sentiment_density~speaker, sentiment_df, mean)
+aggregate(sentiment_density~role_group, sentiment_df, mean)
 
-# ============================================================
-# AGGREGATE: BY SPEAKER
-# ============================================================
-
-# Sum the counts and the words per speaker, then re-derive
-# the label from the summed density. Averaging labels would
-# lose the density weighting Ted asked for. Summing preserves
-# it: a speaker who talked twice as long carries twice the
-# weight in their own row.
-
-aggregateGroup <- function(df, group_col) {
-  groups <- unique(df[[group_col]])
-  out <- data.frame(
-    group = groups,
-    n_turns = integer(length(groups)),
-    total_words = integer(length(groups)),
-    positive_count = integer(length(groups)),
-    negative_count = integer(length(groups)),
-    sentiment_density = numeric(length(groups)),
-    label = character(length(groups)),
-    stringsAsFactors = FALSE
-  )
-
-  for (i in 1:length(groups)) {
-    rows <- df[df[[group_col]] == groups[i], ]
-    out$n_turns[i] <- nrow(rows)
-    out$total_words[i] <- sum(rows$msg_words)
-    out$positive_count[i] <- sum(rows$positive_count)
-    out$negative_count[i] <- sum(rows$negative_count)
-    d <- (out$positive_count[i] - out$negative_count[i]) / max(out$total_words[i], 1)
-    out$sentiment_density[i] <- round(d, 4)
-    out$label[i] <- labelFromDensity(d)
-  }
-
-  return(out)
-}
-
-by_speaker <- aggregateGroup(sentiment_df, "speaker")
-
-# Attach the role_group back for readability.
-speaker_role_lookup <- unique(sentiment_df[, c("speaker", "role_group")])
-by_speaker <- merge(by_speaker, speaker_role_lookup,
-                    by.x = "group", by.y = "speaker",
-                    all.x = TRUE)
-names(by_speaker)[names(by_speaker) == "group"] <- "speaker"
-
-# Sort by density so the most positive and most negative are
-# at the ends.
-by_speaker <- by_speaker[order(by_speaker$sentiment_density, decreasing = TRUE), ]
-
-cat("---- Aggregated by speaker (sorted by density) ----\n")
-print(by_speaker, row.names = FALSE)
-cat("\n")
-
-# ============================================================
-# WHO WAS MOST POSITIVE, MOST NEGATIVE?
-# ============================================================
-
-managementOnly <- by_speaker[by_speaker$role_group == "Company", ]
-analystOnly <- by_speaker[by_speaker$role_group == "Analyst", ]
-
-cat("---- Extremes among management ----\n")
-if (nrow(managementOnly) > 0) {
-  cat("Most positive: ", managementOnly$speaker[1],
-      " (density ", managementOnly$sentiment_density[1], ")\n", sep = "")
-  cat("Most negative: ", managementOnly$speaker[nrow(managementOnly)],
-      " (density ", managementOnly$sentiment_density[nrow(managementOnly)], ")\n", sep = "")
-} else {
-  cat("(no management turns)\n")
-}
-cat("\n")
-
-cat("---- Extremes among analysts ----\n")
-if (nrow(analystOnly) > 0) {
-  cat("Most positive: ", analystOnly$speaker[1],
-      " (density ", analystOnly$sentiment_density[1], ")\n", sep = "")
-  cat("Most negative: ", analystOnly$speaker[nrow(analystOnly)],
-      " (density ", analystOnly$sentiment_density[nrow(analystOnly)], ")\n", sep = "")
-} else {
-  cat("(no analyst turns)\n")
-}
-cat("\n")
-
-# TIP: this is where the split by role earns its keep. The
-# most positive voice on almost every call is a member of
-# management. The interesting cell is "most negative analyst,"
-# because that is the person asking the sharpest questions
-# and, on average, the one whose next earnings estimate moves.
-
-# ============================================================
-# AGGREGATE: BY ROLE GROUP, THEN OVERALL
-# ============================================================
-
-by_role <- aggregateGroup(sentiment_df, "role_group")
-
-cat("---- Aggregated by role group ----\n")
-print(by_role, row.names = FALSE)
-cat("\n")
-
-overall_pos <- sum(sentiment_df$positive_count)
-overall_neg <- sum(sentiment_df$negative_count)
-overall_words <- sum(sentiment_df$msg_words)
-overall_density <- (overall_pos - overall_neg) / max(overall_words, 1)
-overall_label <- labelFromDensity(overall_density)
-
-cat("---- Overall (whole call) ----\n")
-cat("Total turns scored:", nrow(sentiment_df), "\n")
-cat("Total words:      ", overall_words, "\n")
-cat("Positive phrases: ", overall_pos, "\n")
-cat("Negative phrases: ", overall_neg, "\n")
-cat("Density:          ", round(overall_density, 4), "\n")
-cat("Overall label:    ", overall_label, "\n\n")
+# Keep in mind more sophisticated analysis can be done including length of statement
+# often the "most negative analyst," is the person asking the sharpest questions
+# and, on average, the one whose next earnings estimate is likely to move
 
 # ============================================================
 # SAVE
@@ -551,51 +410,30 @@ cat("Overall label:    ", overall_label, "\n\n")
 # summary list. FIN_G reads both when it assembles the human
 # review surface.
 
-if (dir.exists(path.expand(savePth)) == FALSE) {
-  dir.create(path.expand(savePth), recursive = TRUE)
-}
+saveRDS(sentiment_df, file.path(savePth, "sentiment_scores.rds"))
 
 sentiment_summary <- list(
   symbol = SYMBOL,
-  report_date = chosen_date,
+  report_date = latest_date,
   n_turns_scored = nrow(sentiment_df),
   overall = list(
-    positive_count = overall_pos,
-    negative_count = overall_neg,
-    total_words = overall_words,
-    density = round(overall_density, 4),
-    label = overall_label
+    positive_count = sum(sentiment_df$label=='positive'),
+    negative_count = sum(sentiment_df$label=='negative'),
+    total_words    = sum(sentiment_df$msg_words),
+    density        = round(sum(sentiment_df$sentiment_density), 4),
+    label          = names(which.max((table(sentiment_df$label))))
   ),
-  by_role = by_role,
-  by_speaker = by_speaker
+  by_role = aggregate(sentiment_density~role_group, sentiment_df, mean),
+  by_speaker = aggregate(sentiment_density~speaker, sentiment_df, mean)
 )
 
-saveRDS(sentiment_df, file.path(savePth, "sentiment_scores.rds"))
 saveRDS(sentiment_summary, file.path(savePth, "sentiment_summary.rds"))
 
 cat("Saved sentiment_scores.rds and sentiment_summary.rds in\n", savePth, "\n\n")
 
-# ============================================================
-# NOW CHANGE SOMETHING
-# ============================================================
-
-cat("---- Try this ----\n")
-cat("1. Raise MIN_ROW_CHARS to 200 and re-run. You will drop the\n")
-cat("   quick answers and score only the substantial ones. Does the\n")
-cat("   overall label change?\n")
-cat("2. Widen NEUTRAL_BAND to 0.02. Watch how many rows move to neutral.\n")
-cat("   The band is a choice, not a fact.\n")
-cat("3. Change MODEL to a closed weight model, for example\n")
-cat("   google/gemini-2.0-flash-001, re-run one turn, and compare the\n")
-cat("   phrase lists. Is one more literal? Is one more aggressive?\n")
-
-# ============================================================
-# WHAT YOU SHOULD TAKE AWAY
-# ============================================================
-
-cat("\n---- Summary ----\n")
+cat("\n---- Learning Review ----\n")
 cat("1. The model does the language work (finding phrases). R does the\n")
-cat("   arithmetic (counts, density, labels). The split is auditable.\n")
+cat("   arithmetic (counts, density, labels).\n")
 cat("2. Density weighting means a long speaker does not automatically\n")
 cat("   dominate. Ten positive phrases in a hundred words carries more\n")
 cat("   than ten in a thousand.\n")

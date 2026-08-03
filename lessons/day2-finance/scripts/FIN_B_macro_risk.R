@@ -1,7 +1,6 @@
 # ============================================================
 # FIN_B_macro_risk.R
 # LLM Context lesson, Day 2, Finance Masters track
-# (8:00 to 9:00)
 #
 # Purpose: pull live macro and geopolitical risk alerts, and
 # think about what belongs in a context window and what is
@@ -28,31 +27,37 @@ library(jsonlite)
 RISKLINE_URL <- "https://api.riskline.com/alerts/latest.json"
 
 # Save Path
+# Create a folder in your repo called `context_files`
 savePth <- '~/Desktop/vienna-genai-finance-course/context_files'
 
 # Countries you care about for a given investment thesis.
 # Change these and re-run to see the filter work.
-COUNTRIES_OF_INTEREST <- c("United States", "China", "Taiwan", "Germany")
+COUNTRIES_OF_INTEREST <- c("United States of America", "China", "Taiwan", "Germany")
 
 # ============================================================
 # FETCH THE ALERTS
 # ============================================================
 
 cat("Requesting the latest Riskline alerts.\n")
-
 response <- GET(RISKLINE_URL, timeout(30))
 
 # Always check the response before trusting it. A failed
 # request still returns an object, it just has no useful data
 # inside, and a script that skips this check will fail later
 # in a confusing place.
+# We are looking for a "status 200" anything else is an issue
 if (status_code(response) != 200) {
   stop(paste("Request failed with HTTP status", status_code(response)))
 } else {
   cat("Request succeeded.\n")
 }
 
-raw_text <- content(response, as = "text", encoding = "UTF-8")
+# See the result back in R as "response object"
+response
+content(response) #lots of different components returned
+
+# Extract the content of the returned data more easily
+raw_text      <- content(response, as = "text", encoding = "UTF-8")
 alerts_parsed <- fromJSON(raw_text, flatten = TRUE)
 
 # The API wraps its results in a field called "alerts", so the
@@ -68,18 +73,13 @@ if (is.null(alerts) == TRUE || is.data.frame(alerts) == FALSE) {
   cat("Alerts received:", nrow(alerts), "\n\n")
 }
 
-# NOTE ON flatten = TRUE. The response nests country details
-# inside each alert, like country: { name: ..., flag_path: ... }.
-# Flattening turns those into flat columns joined by a dot,
-# so the field is "country.name", not "country". Run
-# names(alerts) below and you will see it.
-
 # ============================================================
 # WHAT DID WE ACTUALLY GET?
 # ============================================================
 
 cat("---- Fields available ----\n")
 cat(paste(names(alerts), collapse = ", "), "\n\n")
+head(alerts)
 
 # TIP: look at that field list before writing any more code.
 # Real APIs rarely return what you assumed. Reading the shape
@@ -93,52 +93,36 @@ preview_cols <- intersect(c("country.name", "title", "created_at"), names(alerts
 
 if (length(preview_cols) > 0) {
   print(head(alerts[, preview_cols], 8), row.names = FALSE)
-} else {
+  } else {
   print(head(alerts, 3))
-}
-cat("\n")
+    }
 
 # ============================================================
 # FILTER TO WHAT MATTERS
 # ============================================================
 
-# This is the context lesson. A global risk feed contains
-# alerts about dozens of countries. Nearly all of them are
-# irrelevant to any single investment thesis. Sending all of
-# them to a language model costs money and, worse, buries the
-# relevant signal in noise.
+# A global risk feed contains alerts about dozens of countries. 
+# Nearly all of them are irrelevant to any single investment thesis. 
+# Sending all of them to a language model costs money and, 
+# buries the relevant signal in noise.
 
-if ("country.name" %in% names(alerts) == TRUE) {
+# Before filtering, see which countries actually appear in this real time GET response.
 
-  # Before filtering, see which countries actually appear.
-  # Filtering on a name that is not in the feed returns zero
-  # rows and looks like a bug, so check first.
-  cat("Countries present in this feed:\n")
-  print(head(sort(table(alerts$country.name), decreasing = TRUE), 12))
-  cat("\n")
+cat("Countries present in this feed:\n")
+t(t(table(alerts$country.name)))
+  
+# Assuming out interest countries are in the data pull
+relevant <- alerts[alerts$country.name %in% COUNTRIES_OF_INTEREST, ]
 
-  relevant <- alerts[alerts$country.name %in% COUNTRIES_OF_INTEREST, ]
+cat("Original Data:", nrow(alerts), "alerts\n")
+cat("Filtered Data:", nrow(relevant), "alerts\n")
 
-  cat("---- Filtered to your countries of interest ----\n")
-  cat("Before:", nrow(alerts), "alerts\n")
-  cat("After: ", nrow(relevant), "alerts\n")
-  if (nrow(alerts) > 0) {
-    cat("Kept:  ", round(100 * nrow(relevant) / nrow(alerts)), "percent\n\n")
-  }
-
-  if (nrow(relevant) > 0) {
-    show_cols <- intersect(c("country.name", "title", "created_at"), names(relevant))
-    print(head(relevant[, show_cols], 10), row.names = FALSE)
-    cat("\n")
+if(nrow(relevant)!=0){
+  relevant$title
   } else {
-    cat("No current alerts for those countries.\n")
-    cat("Look at the country list printed above and pick names that appear there.\n\n")
-  }
-} else {
-  cat("This response has no 'country.name' field, so the filter is skipped.\n")
-  cat("Look at the field list above and pick something else to filter on.\n\n")
-  relevant <- alerts
-}
+  print('No current alerts for countries of interest.  Review the table of country names')
+    }
+
 
 # ============================================================
 # TURN IT INTO CONTEXT
@@ -146,38 +130,19 @@ if ("country.name" %in% names(alerts) == TRUE) {
 
 # A language model cannot read a data frame. Context has to
 # be text. Here we compress the filtered alerts into a short
-# block that would sit inside a prompt.
-
-buildMacroContext <- function(alert_rows) {
-  if (nrow(alert_rows) == 0) {
-    return("No significant macro risk alerts for the regions of interest.")
+# block that would sit inside a prompt
+buildMacroContext <- function(risk_alerts){
+  # Check we have existing alerts
+  if(nrow(risk_alerts)==0){
+    macroBlock <- 'No significant macro risk alerts for the regions of interest.'
+  } else {
+    macroBlock <- apply(risk_alerts[,1:2],1, paste0, collapse = '\n')
+    macroBlock <- paste(macroBlock, collapse = '\n')
   }
-
-  lines <- character(0)
-  n_show <- min(nrow(alert_rows), 10)
-
-  for (i in 1:n_show) {
-    if ("country.name" %in% names(alert_rows) == TRUE) {
-      country_txt <- alert_rows$country.name[i]
-    } else {
-      country_txt <- "Unknown"
-    }
-    title_txt <- alert_rows$title[i]
-
-    # Include when it was published. A model has no sense of
-    # time on its own, so telling it how fresh an item is
-    # changes how much weight that item deserves.
-    if ("created_at" %in% names(alert_rows) == TRUE) {
-      date_txt <- paste0(" (", substr(alert_rows$created_at[i], 1, 10), ")")
-    } else {
-      date_txt <- ""
-    }
-
-    lines <- c(lines, paste0("- ", country_txt, ": ", title_txt, date_txt))
-  }
-
-  block <- paste0("CURRENT MACRO RISK ALERTS\n", paste(lines, collapse = "\n"))
-  return(block)
+  macroBlock <- paste('CURRENT MACRO RISK ALERTS\n',
+                      macroBlock,
+                      collapse = '\n')
+ return(macroBlock) 
 }
 
 macro_context <- buildMacroContext(relevant)
@@ -207,7 +172,7 @@ cat("Roughly", round(nchar(macro_context) / 4), "tokens\n\n")
 
 # FIN_D assembles this together with the transcript and news
 # into a single prompt.
-pth <- file.path(savePth, "macro_context.rds")
+pth <- file.path(savePth, "macro_context.rds") # THIS WILL OVERWRITE OLD MACRO RDS
 saveRDS(macro_context, pth)
 cat(paste("Saved macro_context.rds for use in FIN_D.\n in", pth))
 
@@ -215,7 +180,7 @@ cat(paste("Saved macro_context.rds for use in FIN_D.\n in", pth))
 # WHAT YOU SHOULD TAKE AWAY
 # ============================================================
 
-cat("\n---- Summary ----\n")
+cat("\n---- Learning Review ----\n")
 cat("1. Not every API needs a key. Start with the easy ones.\n")
 cat("2. Read the shape of a response before writing code against it.\n")
 cat("3. Filtering is context engineering. Noise costs money and hides signal.\n")

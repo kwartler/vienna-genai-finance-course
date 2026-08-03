@@ -1,7 +1,6 @@
 # ============================================================
 # FIN_A_load_documents.R
 # LLM Context lesson, Day 2, Finance Masters track
-# (8:00 to 9:00)
 #
 # Purpose: open a real earnings call transcript, see how big
 # it actually is, and learn why "context" is something you
@@ -12,9 +11,8 @@
 #
 # A NOTE ON THIS TRACK. In the Data Science track the rule is
 # that the language model never does arithmetic. Here the rule
-# flips: the model does the core work, because reading text,
-# judging tone, and pulling out names ARE language tasks. Same
-# principle, opposite side of the line. The model is being
+# flips: the model does the core language work, because reading text,
+# judging tone, and pulling out names ARE language tasks. The model is being
 # used for what it is actually good at.
 # ============================================================
 
@@ -116,21 +114,19 @@ cat("Speaker turns in this call:", nrow(this_call), "\n\n")
 speakers <- unique(this_call[, c("speaker", "title")])
 cat("---- Participants ----\n")
 print(speakers, row.names = FALSE)
-cat("\n")
 
 # A simple rule to separate the two groups. It is not perfect,
 # and looking at where it gets things wrong is worthwhile.
-isAnalyst <- function(title_text) {
-  return(grepl("analyst|research", tolower(title_text)) == TRUE)
-}
+role_group <- grepl("analyst|research|managing director", 
+                   this_call$title,
+                   ignore.case = T)
 
-this_call$role_group <- ifelse(isAnalyst(this_call$title) == TRUE, "Analyst", "Company")
+this_call$role_group <- ifelse(role_group == TRUE, "Analyst", "Company")
 
 cat("Turns by group:\n")
 print(table(this_call$role_group))
-cat("\n")
 
-# TIP: hold on to this split. In FIN_F we score sentiment
+# TIP: In FIN_F we score sentiment
 # separately for each group. Management is almost always
 # positive about their own quarter. The interesting question
 # is whether the analysts agree.
@@ -152,7 +148,7 @@ cat("Average turn:", format(round(mean(this_call$msg_chars)), big.mark = ","), "
 
 # STOP AND LOOK AT THAT NUMBER.
 # This is the whole reason "context engineering" is a phrase.
-# One call is enormous. Now imagine you wanted to give the
+# One call with all information is enormous. Now imagine you wanted to give the
 # model four quarters of calls, plus recent news, plus a macro
 # risk feed, and still leave room for its answer.
 
@@ -160,7 +156,7 @@ if (estimated_tokens > CONTEXT_BUDGET_TOKENS) {
   cat("This single call is roughly",
       round(estimated_tokens / CONTEXT_BUDGET_TOKENS, 1),
       "times our", format(CONTEXT_BUDGET_TOKENS, big.mark = ","),
-      "token budget.\n")
+      "fake token budget.  Although artificial it will help with model attention & costs to be specific.\n")
   cat("We cannot just paste the whole thing in. We have to choose.\n\n")
 } else {
   cat("This call fits inside our token budget with room to spare.\n\n")
@@ -170,7 +166,7 @@ if (estimated_tokens > CONTEXT_BUDGET_TOKENS) {
 # STRATEGY 1: SELECT, DO NOT SUMMARIZE
 # ============================================================
 
-# The cheapest way to fit is to send less. Because the data is
+# Because the data is
 # already split by speaker, we can keep only what matters for
 # the question we are asking.
 
@@ -206,6 +202,8 @@ chunk_id <- integer(nrow(this_call))
 current_chunk <- 1
 running_total <- 0
 
+# walk through each turn in order and keep a running character count. 
+# When adding the next turn would exceed CHUNK_BUDGET_CHARS, start a new chunk to send to the LLM
 for (i in 1:nrow(this_call)) {
   turn_size <- this_call$msg_chars[i]
   if (running_total + turn_size > CHUNK_BUDGET_CHARS && running_total > 0) {
@@ -222,7 +220,6 @@ cat("---- Strategy 2: chunk on speaker boundaries ----\n")
 cat("Chunks needed:", max(this_call$chunk), "\n")
 cat("Turns per chunk:\n")
 print(table(this_call$chunk))
-cat("\n")
 
 # TIP: chunking costs you something too. A model reading
 # chunk 3 has no memory of chunk 1. If an analyst refers back
@@ -239,18 +236,16 @@ cat("\n")
 
 cat("---- A management turn ----\n")
 first_company <- company_only[1, ]
-cat(first_company$speaker, " (", first_company$title, ")\n", sep = "")
+cat(first_company$speaker, " (", first_company$title, ")\n\n", sep = "")
 cat(substr(first_company$msg, 1, 700), "\n\n")
 
 analyst_only <- this_call[this_call$role_group == "Analyst", ]
 if (nrow(analyst_only) > 0) {
   cat("---- An analyst turn ----\n")
   first_analyst <- analyst_only[1, ]
-  cat(first_analyst$speaker, " (", first_analyst$title, ")\n", sep = "")
+  cat(first_analyst$speaker, " (", first_analyst$title, ")\n\n", sep = "")
   cat(substr(first_analyst$msg, 1, 700), "\n\n")
-} else {
-  cat("No analyst turns were identified in this call.\n\n")
-}
+} 
 
 # TIP: read those two side by side. Management language is
 # polished and prepared. Analyst language is direct and often
@@ -261,7 +256,7 @@ if (nrow(analyst_only) > 0) {
 # WHAT YOU SHOULD TAKE AWAY
 # ============================================================
 
-cat("---- Summary ----\n")
+cat("---- Learning Review ----\n")
 cat("1. A single earnings call is far larger than a casual prompt.\n")
 cat("2. Context is built by choosing, not by pasting everything.\n")
 cat("3. Speaker structure gives you both a filter and a chunk boundary.\n")

@@ -44,21 +44,16 @@
 #
 # It does NOT: call an LLM. Zero API calls in this script.
 #              Every LLM call happens in the chatbot the
-#              student chooses, outside R. That is the point.
+#              you choose, outside R. That is the point.
 #              The interpretation step is portable. The review
 #              surface is not tied to any one model.
 #
-# ============================================================
-# BRIDGE TO HOUR 3
-# ============================================================
-#
+# Your SPA:
 # In Hour 3 you rebuild everything this morning did in
 # JavaScript, inside a single page application. Same shape,
 # same split: code collects and structures the evidence, an
-# LLM interprets the finished evidence. The review surface
-# there is whatever renders on the page before the research
-# note is produced. Look at the JSON this script writes. That
-# is the object your SPA will build in a browser tab.
+# LLM interprets the finished evidence. The JSON here
+# is the object your SPA will build & produce a note. 
 # ============================================================
 
 # ---- Libraries ----
@@ -113,7 +108,7 @@ cat("Loaded extraction data:", nrow(extraction_df), "extracted turns.\n\n")
 # SANITY CHECK
 # ============================================================
 
-# The three upstream scripts should have used the same symbol
+# The upstream scripts should have used the same symbol
 # and report date. If not, something is stale. Flag it.
 
 sent_symbol <- sentiment_summary$symbol
@@ -223,11 +218,10 @@ cat("     roughly", round(nchar(review_json) / 4), "tokens\n\n")
 
 # Two prompts: a system prompt that sets the rules, and a
 # user prompt that asks the question. Both are written to a
-# file so students can copy the whole block into whatever
-# chatbot they prefer.
+# file so we can have examples to put into any chatbot we want. 
 #
 # The prompt is written to be model neutral. It works in
-# Gemini, in Claude, in ChatGPT, in duck.ai. The rules are
+# Gemini, in Claude, in ChatGPT, in duck.ai, etc. The rules are
 # the same rules FIN_D used, extended for the sentiment and
 # extraction we now have.
 
@@ -292,11 +286,7 @@ cat("READY TO HAND OFF TO A CHATBOT\n")
 cat("============================================================\n\n")
 
 cat("Open ", PROMPT_OUT, ",\n", sep = "")
-cat("copy everything, and paste it into any chatbot:\n")
-cat("  Gemini:   https://gemini.google.com\n")
-cat("  Claude:   https://claude.ai\n")
-cat("  ChatGPT:  https://chat.openai.com\n")
-cat("  duck.ai:  https://duck.ai   (no login, free)\n\n")
+cat("copy everything, and paste it into any chatbot\n")
 
 cat("If your chatbot accepts file attachments, attach\n")
 cat("  ", JSON_OUT, "\n", sep = "")
@@ -308,62 +298,15 @@ cat(chatbot_system_prompt, "\n\n")
 cat("---- The user prompt ----\n")
 cat(chatbot_user_prompt, "\n")
 
-# ============================================================
-# WHAT THE REVIEW SURFACE LOOKS LIKE, IN SUMMARY
-# ============================================================
-
-# Print a one page overview of what is IN the review surface,
-# so students see the shape without having to open the file.
+cat('Example shared conversation here: https://share.gemini.google/1tt3nriDc9MI')
 
 cat("============================================================\n")
-cat("WHAT IS IN THE REVIEW SURFACE\n")
+cat("Now for your SPA Build\n")
 cat("============================================================\n\n")
 
-cat("Symbol:              ", review_surface$meta$symbol, "\n", sep = "")
-cat("Report date:         ", review_surface$meta$report_date, "\n", sep = "")
-cat("Context length:      ", format(review_surface$context$length_chars, big.mark = ","), "characters\n", sep = "")
-cat("\n")
+cat("R's manual, behind the scenes context build is done.  What you built in R, you now build in your vibe coded application.\n")
+cat("What should NOT change: the split. Code collects and structures evidence.\n")
+cat("An LLM interprets finished evidence, writing the research note. A human reads the review surface\n")
 
-cat("Sentiment:\n")
-cat("  Overall label:     ", review_surface$sentiment$overall$label, "\n", sep = "")
-cat("  Overall density:   ", review_surface$sentiment$overall$density, "\n", sep = "")
-cat("  Positive phrases:  ", review_surface$sentiment$overall$positive_count, "\n", sep = "")
-cat("  Negative phrases:  ", review_surface$sentiment$overall$negative_count, "\n", sep = "")
-cat("\n")
-
-cat("Extraction:\n")
-cat("  Companies:         ", length(review_surface$extraction$companies_mentioned), "\n", sep = "")
-cat("  Executives:        ", nrow(review_surface$extraction$executives), "\n", sep = "")
-cat("  Products:          ", length(review_surface$extraction$products_and_segments), "\n", sep = "")
-cat("  Financial figures: ", nrow(review_surface$extraction$financial_figures), "\n", sep = "")
-cat("  Forward looking:   ", nrow(review_surface$extraction$forward_looking_statements), "\n", sep = "")
-cat("\n")
-
-# ============================================================
-# BRIDGE TO HOUR 3
-# ============================================================
-
-cat("============================================================\n")
-cat("BRIDGE TO THE HOUR 3 SPA BUILD\n")
-cat("============================================================\n\n")
-
-cat("The morning is done. What you built in R, you now build in JavaScript.\n")
-cat("The pattern carries over unchanged:\n\n")
-cat("  R script                       Vibe coded SPA equivalent\n")
-cat("  ------------------------       ------------------------------------\n")
-cat("  FIN_B, FIN_C (fetch)           fetch() calls in the browser\n")
-cat("  FIN_A (transcript loading)     read a text file or paste a transcript\n")
-cat("  FIN_D (assemble context)       build a context object in JavaScript\n")
-cat("  FIN_E (sentiment)              OpenRouter call with JSON schema, per turn\n")
-cat("  FIN_F (extraction)             OpenRouter call with JSON schema, per turn\n")
-cat("  FIN_G (review surface)         a panel in the SPA that renders the JSON\n")
-cat("                                 for a human to read before publishing\n\n")
-
-cat("What did NOT change: the split. Code collects and structures evidence.\n")
-cat("An LLM interprets finished evidence. A human reads the review surface\n")
-cat("before the note goes anywhere.\n\n")
-
-cat("This is why the review surface has a name. It is the checkpoint\n")
-cat("Knight Capital did not build. Yours does.\n")
 
 # End
