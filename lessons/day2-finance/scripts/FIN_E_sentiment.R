@@ -27,17 +27,13 @@
 #    provider layer, so the response arrives already parseable.
 #    No fence stripping, no missing field surprises.
 #
-# 3. Open weight versus closed weight. The model we use here
-#    is open weight, meaning its parameters are published under
-#    a permissive license. Closed weight models like Gemini and
-#    Claude keep their parameters private. Both call the same
-#    way through OpenRouter. Open weight models cost less per
-#    token, could run on your own hardware if you ever needed
-#    to, and cannot be silently deprecated by a provider.
-#    Closed weight models tend to be stronger at the frontier
-#    of capability, but for a bounded task like sentiment
-#    classification the gap has closed. This is a good place
-#    to use open weight and pocket the savings.
+# 3. Model choice: speed versus openness. The class default is
+#    Gemini Flash Lite because 100-plus row-level calls finish
+#    quickly. Gemini is closed weight: its parameters are not
+#    published. To compare an open-weight model, set
+#    OPENROUTER_ROW_MODEL="openai/gpt-oss-20b" before running.
+#    Both use the same OpenRouter request and JSON schema, so
+#    the tradeoff can be tested without rewriting the script.
 #
 # APPROACH: PER ROW, NOT BATCHED.
 # We send one API call per speaker turn. That is slower and
@@ -77,10 +73,10 @@ SYMBOL <- "AAPL"
 
 OPENROUTER_URL <- "https://openrouter.ai/api/v1/chat/completions"
 
-# Open weight, cheap, reliable at JSON schema. Kept as a top
-# level constant so switching to a closed model (for example
-# google/gemini-3.5-flash-lite) is a one line change.
-MODEL <- "mistralai/mistral-small-3.2-24b-instruct"
+# Fast and reliable at JSON schema for a 100-plus-call classroom
+# exercise. Set OPENROUTER_ROW_MODEL to try another model without
+# editing the script.
+MODEL <- Sys.getenv("OPENROUTER_ROW_MODEL", unset = "google/gemini-3.5-flash-lite")
 
 # Rows shorter than this are dropped before scoring. A twenty
 # character "thank you" turn cannot carry sentiment and would
@@ -88,9 +84,9 @@ MODEL <- "mistralai/mistral-small-3.2-24b-instruct"
 # substantive remarks only.
 MIN_ROW_CHARS <- 40
 
-# httr2 retry policy. Three tries covers most transient
+# httr2 retry policy. Five tries covers most transient
 # failures without turning a real error into a long wait.
-RETRY_MAX <- 3
+RETRY_MAX <- 5
 
 # The density threshold that separates "leaning positive" or
 # "leaning negative" from "neutral" during aggregation. In
@@ -106,6 +102,10 @@ NEUTRAL_BAND <- 0.005
 # ============================================================
 
 openrouter_key <- Sys.getenv("OPENROUTER_API_KEY")
+
+if (nchar(openrouter_key) == 0) {
+  stop("No OpenRouter key. Set OPENROUTER_API_KEY in .Renviron and restart R.")
+}
 
 # ============================================================
 # LOAD ONE CALL (same pattern as FIN_D)
@@ -237,9 +237,11 @@ scoreOneTurn <- function(passage_text) {
   )
   req <- req_body_raw(req, toJSON(request_body, auto_unbox = TRUE), type = "application/json")
   req <- req_timeout(req, 120)
-  # This is the line Ted asked for. Three tries, exponential
+  # This is the line Ted asked for. Five tries, exponential
   # backoff, retries on transient failures automatically.
-  req <- req_retry(req, max_tries = RETRY_MAX, backoff = ~ 2 ^ .x)
+  req <- req_retry(req,
+                   max_tries = RETRY_MAX,
+                   retry_on_failure = TRUE)
 
   resp <- req_perform(req)
 
@@ -305,6 +307,7 @@ kept$negative_count <- integer(n_kept)
 kept$positive_phrases <- character(n_kept)
 kept$negative_phrases <- character(n_kept)
 kept$msg_words <- integer(n_kept)
+kept$api_failed <- logical(n_kept)
 
 # Word count is done in R, not by the model. Splitting on
 # whitespace is rough (it counts "don't" as one word and
@@ -324,13 +327,17 @@ for (i in 1:n_kept) {
   # Score. Because we used req_retry, transient errors are
   # already handled. If we get here with a hard error, wrap
   # it so one bad row does not kill the loop.
+  row_failed <- FALSE
   scored <- tryCatch(
     scoreOneTurn(kept$msg[i]),
     error = function(e) {
+      row_failed <<- TRUE
       cat("  (row failed after retries: ", conditionMessage(e), ")\n", sep = "")
       return(list(positive_phrases = character(0), negative_phrases = character(0)))
     }
   )
+
+  kept$api_failed[i] <- row_failed
 
   kept$positive_count[i] <- length(scored$positive_phrases)
   kept$negative_count[i] <- length(scored$negative_phrases)
@@ -340,6 +347,11 @@ for (i in 1:n_kept) {
 }
 
 cat("\nScoring complete.\n\n")
+
+if (any(kept$api_failed)) {
+  stop(sum(kept$api_failed),
+       " row(s) failed after retries. No sentiment files were saved; rerun when the API is available.")
+}
 
 # ============================================================
 # DERIVE THE PER ROW LABEL
@@ -441,7 +453,7 @@ cat("3. Per row calls are slow and clear. Batching is fast and opaque.\n")
 cat("   Choose deliberately.\n")
 cat("4. JSON schema removes an entire class of parsing bugs.\n")
 cat("5. httr2's req_retry() makes a fifty call loop safe.\n")
-cat("6. Open weight models are a fine fit for bounded classification\n")
-cat("   like this. Save the frontier models for the tasks that need them.\n")
+cat("6. Model speed matters in a row-wise classroom exercise. Use the\n")
+cat("   environment override to compare models without changing the code.\n")
 
 # End

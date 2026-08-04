@@ -74,21 +74,25 @@ REPORTING_COMPANY <- "Apple"
 
 OPENROUTER_URL <- "https://openrouter.ai/api/v1/chat/completions"
 
-# Same open weight default as FIN_E. Switch to a closed model
-# by changing one line.
-MODEL <- "mistralai/mistral-small-3.2-24b-instruct"
+# Open-weight default for the extraction comparison. Set
+# OPENROUTER_ROW_MODEL to try another model without editing.
+MODEL <- Sys.getenv("OPENROUTER_ROW_MODEL", unset = "openai/gpt-oss-20b")
 
 # Same length filter as FIN_E: nothing meaningful to extract
 # from a "thanks, next question."
 MIN_ROW_CHARS <- 40
 
-RETRY_MAX <- 3
+RETRY_MAX <- 5
 
 # ============================================================
 # THE API KEY
 # ============================================================
 
 openrouter_key <- Sys.getenv("OPENROUTER_API_KEY")
+
+if (nchar(openrouter_key) == 0) {
+  stop("No OpenRouter key. Set OPENROUTER_API_KEY in .Renviron and restart R.")
+}
 
 # ============================================================
 # LOAD ONE CALL (same pattern as FIN_D and FIN_E)
@@ -271,7 +275,9 @@ extractOneTurn <- function(passage_text) {
   )
   req <- req_body_raw(req, toJSON(request_body, auto_unbox = TRUE), type = "application/json")
   req <- req_timeout(req, 120)
-  req <- req_retry(req, max_tries = RETRY_MAX, backoff = ~ 2 ^ .x)
+  req <- req_retry(req,
+                   max_tries = RETRY_MAX,
+                   retry_on_failure = TRUE)
 
   resp <- req_perform(req)
 
@@ -365,6 +371,7 @@ kept$financial_figures_list <- character(n_kept)
 kept$forward_looking_list <- character(n_kept)
 
 per_turn_full <- vector("list", n_kept)
+api_failed <- logical(n_kept)
 
 # Helpers to flatten nested items into a semicolon separated
 # string for the readable columns. Semicolons because commas
@@ -403,9 +410,11 @@ for (i in 1:n_kept) {
 
   cat("[", i, "/", n_kept, "] ", substr(kept$speaker[i], 1, 30), "\n", sep = "")
 
+  row_failed <- FALSE
   extracted <- tryCatch(
     extractOneTurn(kept$msg[i]),
     error = function(e) {
+      row_failed <<- TRUE
       cat("  (row failed after retries: ", conditionMessage(e), ")\n", sep = "")
       return(list(
         companies = list(),
@@ -416,6 +425,8 @@ for (i in 1:n_kept) {
       ))
     }
   )
+
+  api_failed[i] <- row_failed
 
   per_turn_full[[i]] <- extracted
 
@@ -433,6 +444,11 @@ for (i in 1:n_kept) {
 }
 
 cat("\nExtraction complete.\n\n")
+
+if (any(api_failed)) {
+  stop(sum(api_failed),
+       " row(s) failed after retries. No extraction files were saved; rerun when the API is available.")
+}
 
 # ============================================================
 # BUILD THE PER TURN DATA FRAME

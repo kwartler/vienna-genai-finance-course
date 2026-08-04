@@ -95,7 +95,7 @@ response <- GET(NEWSDATA_URL,
                 timeout(30))
 
 # Did we get 200?
-status_code(response)
+code <- status_code(response)
 
 if (code != 200) {
   err_txt <- content(response, as = "text", encoding = "UTF-8")
@@ -103,7 +103,7 @@ if (code != 200) {
   cat("The API said:\n", err_txt, "\n\n")
   
   if (code == 401) {
-    cat("401 means the key was rejected. Check NEWSDATA_API_KEY.\n")
+    cat("401 means the key was rejected. Check NEWS_DATA_IO_API_KEY.\n")
   }
   if (code == 422) {
     cat("422 usually means a parameter your plan does not allow, or a value it does not accept.\n")
