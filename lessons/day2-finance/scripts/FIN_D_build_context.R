@@ -44,7 +44,7 @@ MODEL <- "google/gemini-3.5-flash-lite"
 
 # How much of the transcript to include. This is the number
 # you will want to change and re-run.
-TRANSCRIPT_TURNS <- 12
+TRANSCRIPT_TURNS <- 12 # Increase to put more of the transcript into context.  This is just the first few.
 
 CHARS_PER_TOKEN <- 4
 
@@ -275,3 +275,5 @@ cat("2. What you leave out shapes the answer as much as what you include.\n")
 cat("3. Order matters: primary source first, question last.\n")
 cat("4. The system prompt governs how the informational context is treated.\n")
 cat("5. Telling a model to admit gaps may stop it from inventing BUT does not always work.  Models are trained to be helpful and may hallucinate a fact and present it confidently.\n")
+
+# End

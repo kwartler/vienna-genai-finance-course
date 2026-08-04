@@ -13,9 +13,13 @@ Run this code within the R Console
 # Step 4 - add your API keys with the *exact* name here
 Within the R "scripting" area in the opened up file, paste your keys.  Replace the text between the ' and ' from below.
 
+### **Remove the ` back ticks below.
+
+Just use the variable name equals and quote with keys.
+
 `OPENROUTER_API_KEY='sk-or-v1-...a5'`
 
-`NEWSORG_API_KEY='b6...fb'`
+`NEWS_DATA_IO_API_KEY='pub_2...16'`
 
 `FMP_API_KEY='yv...pf'`
 
