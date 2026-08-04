@@ -14,8 +14,8 @@
 # a person, then follow the loop.
 #
 # WHAT'S THE SAME AS FIN_E.
-# httr2 with retry, JSON schema validation, open weight model
-# by default, per row calls, one call per turn. The pedagogy
+# httr2 with retry, JSON schema validation, a fast classroom
+# model by default, per row calls, one call per turn. The pedagogy
 # from FIN_E carries. If you skipped FIN_E, read its header.
 #
 # WHAT'S NEW HERE.
@@ -74,9 +74,9 @@ REPORTING_COMPANY <- "Apple"
 
 OPENROUTER_URL <- "https://openrouter.ai/api/v1/chat/completions"
 
-# Open-weight default for the extraction comparison. Set
-# OPENROUTER_ROW_MODEL to try another model without editing.
-MODEL <- Sys.getenv("OPENROUTER_ROW_MODEL", unset = "openai/gpt-oss-20b")
+# Fast default for a 100-plus-call classroom exercise. Set
+# OPENROUTER_ROW_MODEL to compare another model without editing.
+MODEL <- Sys.getenv("OPENROUTER_ROW_MODEL", unset = "google/gemini-3.5-flash-lite")
 
 # Same length filter as FIN_E: nothing meaningful to extract
 # from a "thanks, next question."
