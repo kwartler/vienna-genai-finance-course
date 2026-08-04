@@ -50,9 +50,8 @@ if (nchar(api_key) == 0) {
 
 NEWS_URL <- "https://newsapi.org/v2/everything"
 
-# Save Path
-# Create a folder in your repo called `context_files`
-savePth <- '~/Desktop/vienna-genai-finance-course/context_files'
+# Save path, relative to the RStudio project root.
+savePth <- "context_files"
 
 # The company to research.
 SYMBOL       <- "AAPL"

@@ -26,10 +26,11 @@ library(jsonlite)
 # CONFIGURATION
 # ============================================================
 
-# can be your local CSVs of earnings calls folder
-ARCHIVE_DIR <- "~/Desktop/vienna-genai-finance-course/earnings_call_archive/transcripts_sp500_marketbeat"
+# Local transcript CSVs, relative to the RStudio project root.
+ARCHIVE_DIR <- file.path("earnings_call_archive", "transcripts_sp500_marketbeat")
 
-savePth <- "~/Desktop/vienna-genai-finance-course/context_files"
+# Shared output folder, also relative to the project root.
+savePth <- "context_files"
 
 SYMBOL <- "AAPL"
 COMPANY_NAME <- "Apple"

@@ -64,7 +64,8 @@ library(jsonlite)
 # CONFIGURATION
 # ============================================================
 
-savePth <- "~/Desktop/vienna-genai-finance-course/context_files"
+# Shared output folder, relative to the RStudio project root.
+savePth <- "context_files"
 
 # For labeling. FIN_G does not choose a symbol, it reads what
 # the upstream scripts produced. The symbol below is used only

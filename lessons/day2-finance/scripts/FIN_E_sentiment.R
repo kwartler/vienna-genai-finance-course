@@ -68,9 +68,9 @@ library(jsonlite)
 # CONFIGURATION
 # ============================================================
 
-ARCHIVE_DIR <- "~/Desktop/vienna-genai-finance-course/earnings_call_archive/transcripts_sp500_marketbeat"
+ARCHIVE_DIR <- file.path("earnings_call_archive", "transcripts_sp500_marketbeat")
 
-savePth <- "~/Desktop/vienna-genai-finance-course/context_files"
+savePth <- "context_files"
 
 # The company to score. Change and re-run.
 SYMBOL <- "AAPL"

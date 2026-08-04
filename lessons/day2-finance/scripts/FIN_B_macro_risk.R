@@ -27,10 +27,8 @@ library(jsonlite)
 # Open this in the browser to see it live
 RISKLINE_URL <- "https://api.riskline.com/alerts/latest.json"
 
-# Save Path
-### CREATE a folder in your repo called `context_files` then
-### Change the path to your folder
-savePth <- '~/Desktop/vienna-genai-finance-course/context_files'
+# Save path, relative to the RStudio project root.
+savePth <- "context_files"
 
 # Countries you care about for a given investment thesis.
 # Change these and re-run to see the filter work.

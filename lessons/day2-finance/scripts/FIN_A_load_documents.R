@@ -23,8 +23,9 @@
 # CONFIGURATION
 # ============================================================
 
-# Folder holding the scraped transcript CSVs.
-ARCHIVE_DIR <- "~/Desktop/vienna-genai-finance-course/earnings_call_archive/transcripts_sp500_marketbeat"
+# Folder holding the scraped transcript CSVs. This path is relative to the
+# RStudio project root, so it works wherever the repository is cloned.
+ARCHIVE_DIR <- file.path("earnings_call_archive", "transcripts_sp500_marketbeat")
 
 # Which company to look at. Change this and re-run.
 SYMBOL <- "AAPL"

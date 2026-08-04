@@ -41,9 +41,8 @@ api_key <- Sys.getenv("NEWS_DATA_IO_API_KEY")
 # newsdata.io "latest" endpoint (keyword search over recent news).
 NEWSDATA_URL <- "https://newsdata.io/api/1/latest"
 
-# Save path.
-# Create a folder in your repo called `context_files`.
-savePth <- "~/Desktop/vienna-genai-finance-course/context_files"
+# Save path, relative to the RStudio project root.
+savePth <- "context_files"
 
 # The company to research.
 SYMBOL       <- "AAPL"
