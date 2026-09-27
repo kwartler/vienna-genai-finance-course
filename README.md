@@ -27,6 +27,8 @@ Instructor: Ted Kwartler
 | frankfurter API| https://frankfurter.dev/ | free exchange rate info; no account needed |
 | finnhub| https://finnhub.io/ | earnings call |
 | newsdata | newsdata.io | recent news| 
+| Market Stack | marketstack.com | intraday day and other info|
+| alpaca | alpaca.markets| need a api key and application secret, intraday and other info |
 
 
 ---
