@@ -24,6 +24,10 @@ Instructor: Ted Kwartler
 | Financial Modeling Prep | [financialmodelingprep.com](https://financialmodelingprep.com) | Free tier — save your API key |
 | Twelve Data | [twelvedata.com](https://twelvedata.com) | Free Basic plan (alternative to FMP for OHLC data), save your API key |
 | Google AI Studio | [aistudio.google.com](https://aistudio.google.com) | Free — generate a Gemini API key and save it |
+| frankfurter API| https://frankfurter.dev/ | free exchange rate info; no account needed |
+| finnhub| https://finnhub.io/ | earnings call |
+| newsdata | newsdata.io | recent news| 
+
 
 ---
 
